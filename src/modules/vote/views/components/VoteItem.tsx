@@ -10,9 +10,18 @@ interface VoteItemProps {
 
 const VoteItem = ({ voteInfo }: VoteItemProps) => {
   const [isChecked, setIsChecked] = useState<string>();
+  const [openStatistics, setOpenStatistics] = useState<boolean>(false);
+  const statisticsTotal = voteInfo.items.reduce<number>(
+    (a, b) => a + b.like,
+    0,
+  );
 
   const handleOptionCheck = (value: string) => {
     setIsChecked(value);
+  };
+
+  const handleStatistics = () => {
+    setOpenStatistics(!openStatistics);
   };
 
   return (
@@ -29,22 +38,43 @@ const VoteItem = ({ voteInfo }: VoteItemProps) => {
           color="#ff4949"
         />
       </div>
-      <OptionList>
-        {voteInfo.items.map((item) => {
-          return (
-            <li>
-              <RadioV2
-                id={item.name}
-                label={item.name}
-                value={item.name}
-                checked={isChecked === item.name}
-                onChange={handleOptionCheck}
-                className="radio"
-              />
-            </li>
-          );
-        })}
-      </OptionList>
+      <BodyWrap>
+        {openStatistics ? (
+          <StatisticsList>
+            {voteInfo.items.map((item) => {
+              return (
+                <li key={item.id}>
+                  <span className="name">{item.name}</span>
+                  <ResultBar total={statisticsTotal} like={item.like}>
+                    <div className="bar" />
+                    <span className="count">
+                      {item.like}표{" "}
+                      {((100 / statisticsTotal) * item.like).toFixed(1)}%
+                    </span>
+                  </ResultBar>
+                </li>
+              );
+            })}
+          </StatisticsList>
+        ) : (
+          <OptionList>
+            {voteInfo.items.map((item) => {
+              return (
+                <li key={item.id}>
+                  <RadioV2
+                    id={item.name}
+                    label={item.name}
+                    value={item.name}
+                    checked={isChecked === item.name}
+                    onChange={handleOptionCheck}
+                    className="radio"
+                  />
+                </li>
+              );
+            })}
+          </OptionList>
+        )}
+      </BodyWrap>
       <ButtonsWrap>
         <ButtonV2
           style={{
@@ -54,8 +84,9 @@ const VoteItem = ({ voteInfo }: VoteItemProps) => {
             color: "#fff",
             border: "none",
           }}
+          onClick={handleStatistics}
         >
-          투표 결과
+          {openStatistics ? "돌아가기" : "투표 결과"}
         </ButtonV2>
         <ButtonV2
           style={{
@@ -64,6 +95,7 @@ const VoteItem = ({ voteInfo }: VoteItemProps) => {
             backgroundColor: "#1e85fa",
             color: "#fff",
             border: "none",
+            display: openStatistics ? "none" : "block",
           }}
         >
           투표
@@ -76,11 +108,12 @@ const VoteItem = ({ voteInfo }: VoteItemProps) => {
 export default VoteItem;
 
 const VoteItemBox = styled.article`
+  max-width: 800px;
+  margin: 0 auto 14px;
   background-color: #fff;
-  border: 2px solid #1e85fa;
+  box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   border-radius: 6px;
   padding: 12px;
-  margin-bottom: 14px;
 
   .title {
     display: flex;
@@ -102,22 +135,71 @@ const VoteItemBox = styled.article`
     .delete {
       cursor: pointer;
     }
+
+    .delete:hover {
+      color: #fc7171;
+    }
   }
 `;
 
-const OptionList = styled.ul`
-  list-style: none;
+const BodyWrap = styled.div`
   padding: 14px 6px;
   margin: 10px 0;
   border-top: 2px solid #dfdfdf;
   border-bottom: 2px solid #dfdfdf;
 
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;
+
+const OptionList = styled.ul`
   li {
-    margin-bottom: 4px;
+    height: 30px;
+    margin-bottom: 10px;
+    padding: 5px 0;
     label {
       color: #505050;
       font-weight: 500;
     }
+  }
+`;
+
+const StatisticsList = styled.ul`
+  .name {
+    color: #505050;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  li {
+    margin-left: 8px;
+    margin-bottom: 10px;
+  }
+`;
+
+const ResultBar = styled.div<{ total: number; like: number }>`
+  display: flex;
+  margin-top: 4px;
+  .bar {
+    width: ${(props) => (100 / props.total) * props.like}%;
+    height: 12px;
+    background-color: #1d99f8;
+    border-radius: 10px;
+  }
+
+  .count {
+    font-size: 12px;
+    line-height: 12px;
+    margin-left: 8px;
+    color: #1d99f8;
+    font-weight: 500;
   }
 `;
 

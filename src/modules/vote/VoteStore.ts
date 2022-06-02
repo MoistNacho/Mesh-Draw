@@ -10,6 +10,7 @@ export interface Vote {
 }
 
 export interface VoteItem {
+  id: number;
   like: number;
   name: string;
 }
@@ -24,9 +25,9 @@ export default class VoteStore {
       id: 0,
       userId: "test",
       items: [
-        { like: 0, name: "치킨" },
-        { like: 0, name: "피자" },
-        { like: 0, name: "햄버거" },
+        { id: 0, like: 2, name: "치킨" },
+        { id: 1, like: 1, name: "피자" },
+        { id: 2, like: 5, name: "햄버거" },
       ],
     },
   ];
@@ -36,7 +37,8 @@ export default class VoteStore {
   }
 
   @action
-  public getVoteList() {
-    return this.voteList;
+  public getVoteAnswer(vote: Vote) {
+    const result = vote && this.voteList[0];
+    return result;
   }
 }
