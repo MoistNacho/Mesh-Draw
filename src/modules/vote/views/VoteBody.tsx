@@ -1,15 +1,21 @@
 import { ButtonV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { useVoteStore } from "../VoteProvider";
 
 import VoteItem from "./components/VoteItem";
+import VoteModalForm from "./components/VoteModalForm";
 
 const VoteBody = observer(() => {
   const { voteStore } = useVoteStore();
   const { voteList } = voteStore;
+  const [openAddForm, setOpenAddForm] = useState<boolean>(false);
+
+  const closeAddForm = () => {
+    setOpenAddForm(false);
+  };
 
   return (
     <VoteBodyWrap>
@@ -17,6 +23,9 @@ const VoteBody = observer(() => {
         <ButtonV2
           status="primary"
           style={{ width: "200px", height: "40px", backgroundColor: "#14BE7D" }}
+          onClick={() => {
+            setOpenAddForm(true);
+          }}
         >
           투표 추가
         </ButtonV2>
@@ -26,6 +35,7 @@ const VoteBody = observer(() => {
           return <VoteItem key={voteInfo.id} voteInfo={voteInfo} />;
         })}
       </VoteListSection>
+      {openAddForm && <VoteModalForm closeAddForm={closeAddForm} />}
     </VoteBodyWrap>
   );
 });
@@ -33,13 +43,16 @@ const VoteBody = observer(() => {
 export default VoteBody;
 
 const VoteBodyWrap = styled.div`
-  border-left: 3px solid #558bca;
-  border-right: 3px solid #558bca;
-  background-color: #ffffff;
-  width: 800px;
+  background-color: #558bca;
+  /* border-left: 3px solid #558bca;
+  border-right: 3px solid #558bca; */
   height: 100%;
   margin: 0 auto;
   color: #303540;
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 const TopWrap = styled.div`
@@ -48,12 +61,14 @@ const TopWrap = styled.div`
   align-items: center;
   justify-content: center;
 
+  button {
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
   button:hover {
     background-color: #42d19a !important;
   }
 `;
 
 const VoteListSection = styled.section`
-  padding: 0 20px;
   padding-bottom: 40px;
 `;
