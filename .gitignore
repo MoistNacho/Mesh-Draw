@@ -1,0 +1,11 @@
+.DS_Store
+.eslintcache
+.npmrc
+*.log
+coverage
+cypress/screenshots
+cypress/videos
+dist
+node_modules
+src/apiClients
+yarnlog

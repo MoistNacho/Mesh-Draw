@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "mikestead.dotenv",
+    "dbaeumer.vscode-eslint",
+    "davidanson.vscode-markdownlint",
+    "mermade.openapi-lint",
+    "johnpapa.vscode-peacock",
+    "esbenp.prettier-vscode",
+    "stylelint.vscode-stylelint",
+    "redhat.vscode-yaml"
+  ]
+}

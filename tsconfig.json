@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "noEmit": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ES6",
+      "ES2016",
+      "ES2017",
+      "ES2018",
+      "esnext",
+      "dom",
+      "esnext.intl",
+      "ES2017.Intl",
+      "ES2018.Intl"
+    ],
+    "jsx": "react",
+    "typeRoots": ["@types", "node_modules/@types"]
+  },
+  "include": ["src/**/*", "@types/**/*"]
+}
