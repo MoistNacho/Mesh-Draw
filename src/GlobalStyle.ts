@@ -7,6 +7,7 @@ const GlobalStyle = createGlobalStyle`
   html,
   body {
     font-family: ${foundations.typography.fontFamily};
+    background-color: #558bca;
   }
 
   button,
