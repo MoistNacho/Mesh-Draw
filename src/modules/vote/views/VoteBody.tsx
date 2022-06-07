@@ -3,14 +3,14 @@ import { observer } from "mobx-react";
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { ModalFormProvider, ModalForm } from "../../modalForm";
 import { useVoteStore } from "../VoteProvider";
 
 import VoteItem from "./components/VoteItem";
-import VoteModalForm from "./components/VoteModalForm";
 
 const VoteBody = observer(() => {
   const { voteStore } = useVoteStore();
-  const { voteList } = voteStore;
+  const { voteList, addVoteList, removeVoteList } = voteStore;
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
 
   const closeAddForm = () => {
@@ -32,10 +32,20 @@ const VoteBody = observer(() => {
       </TopWrap>
       <VoteListSection>
         {voteList.map((voteInfo) => {
-          return <VoteItem key={voteInfo.id} voteInfo={voteInfo} />;
+          return (
+            <VoteItem
+              key={voteInfo.id}
+              voteInfo={voteInfo}
+              removeVoteList={removeVoteList}
+            />
+          );
         })}
       </VoteListSection>
-      {openAddForm && <VoteModalForm closeAddForm={closeAddForm} />}
+      {openAddForm && (
+        <ModalFormProvider>
+          <ModalForm closeAddForm={closeAddForm} addVoteList={addVoteList} />
+        </ModalFormProvider>
+      )}
     </VoteBodyWrap>
   );
 });
@@ -43,7 +53,6 @@ const VoteBody = observer(() => {
 export default VoteBody;
 
 const VoteBodyWrap = styled.div`
-  background-color: #558bca;
   /* border-left: 3px solid #558bca;
   border-right: 3px solid #558bca; */
   height: 100%;
