@@ -6,9 +6,10 @@ import { Vote } from "../../VoteStore";
 
 interface VoteItemProps {
   voteInfo: Vote;
+  removeVoteList(id: string): void;
 }
 
-const VoteItem = ({ voteInfo }: VoteItemProps) => {
+const VoteItem = ({ voteInfo, removeVoteList }: VoteItemProps) => {
   const [isChecked, setIsChecked] = useState<string>();
   const [openStatistics, setOpenStatistics] = useState<boolean>(false);
   const statisticsTotal = voteInfo.items.reduce<number>(
@@ -36,6 +37,9 @@ const VoteItem = ({ voteInfo }: VoteItemProps) => {
           width="30px"
           height="30px"
           color="#ff4949"
+          onClick={() => {
+            removeVoteList(voteInfo.id);
+          }}
         />
       </div>
       <BodyWrap>
@@ -49,7 +53,10 @@ const VoteItem = ({ voteInfo }: VoteItemProps) => {
                     <div className="bar" />
                     <span className="count">
                       {item.like}표{" "}
-                      {((100 / statisticsTotal) * item.like).toFixed(1)}%
+                      {statisticsTotal >= 1
+                        ? ((100 / statisticsTotal) * item.like).toFixed(1)
+                        : 0}
+                      %
                     </span>
                   </ResultBar>
                 </li>

@@ -5,7 +5,7 @@ import Core from "core";
 export interface Vote {
   title: string;
   items: VoteItem[];
-  id: number;
+  id: string;
   userId: string;
 }
 
@@ -22,12 +22,12 @@ export default class VoteStore {
   public voteList: Vote[] = [
     {
       title: "먹고싶은 음식",
-      id: 0,
+      id: new Date().toLocaleString(),
       userId: "test",
       items: [
         { id: 0, like: 2, name: "치킨" },
         { id: 1, like: 1, name: "피자" },
-        { id: 2, like: 5, name: "햄버거" },
+        { id: 2, like: 0, name: "햄버거" },
       ],
     },
   ];
@@ -36,9 +36,13 @@ export default class VoteStore {
     this.core = core;
   }
 
-  @action
-  public getVoteAnswer(vote: Vote) {
-    const result = vote && this.voteList[0];
-    return result;
+  @action.bound
+  public addVoteList(voteItem: Vote) {
+    this.voteList = [...this.voteList, voteItem];
+  }
+
+  @action.bound
+  public removeVoteList(voteId: string) {
+    this.voteList = this.voteList.filter((item) => item.id !== voteId);
   }
 }
