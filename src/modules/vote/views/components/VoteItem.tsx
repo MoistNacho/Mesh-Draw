@@ -2,14 +2,17 @@ import { ButtonV2, IconV2, RadioV2 } from "@meshkorea/vroong-design-system-web";
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { UserType } from "core/services/FireBase";
+
 import { Vote } from "../../VoteStore";
 
 interface VoteItemProps {
+  user: UserType;
   voteInfo: Vote;
   removeVoteList(id: string): void;
 }
 
-const VoteItem = ({ voteInfo, removeVoteList }: VoteItemProps) => {
+const VoteItem = ({ user, voteInfo, removeVoteList }: VoteItemProps) => {
   const [isChecked, setIsChecked] = useState<string>();
   const [openStatistics, setOpenStatistics] = useState<boolean>(false);
   const statisticsTotal = voteInfo.items.reduce<number>(
@@ -26,21 +29,23 @@ const VoteItem = ({ voteInfo, removeVoteList }: VoteItemProps) => {
   };
 
   return (
-    <VoteItemBox key={voteInfo.id}>
+    <VoteItemBox>
       <div className="title">
         <h3>
           주제 : <b>{voteInfo.title}</b>
         </h3>
-        <IconV2
-          name="CONTENTS_CLEAR"
-          className="delete"
-          width="30px"
-          height="30px"
-          color="#ff4949"
-          onClick={() => {
-            removeVoteList(voteInfo.id);
-          }}
-        />
+        {user?.uid === voteInfo.userId && (
+          <IconV2
+            name="CONTENTS_CLEAR"
+            className="delete"
+            width="30px"
+            height="30px"
+            color="#ff4949"
+            onClick={() => {
+              removeVoteList(voteInfo.id);
+            }}
+          />
+        )}
       </div>
       <BodyWrap>
         {openStatistics ? (

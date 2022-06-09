@@ -3,136 +3,140 @@ import { observer } from "mobx-react";
 import React from "react";
 import styled from "styled-components";
 
+import { UserType } from "core/services/FireBase";
 import { Vote } from "modules/vote/VoteStore";
 
 import { useModalFormStore } from "../ModalFormProvider";
 
 interface ModalFormProps {
+  user: UserType;
   closeAddForm: VoidFunction;
   addVoteList(voteItem: Vote): void;
 }
 
-const ModalForm = observer(({ closeAddForm, addVoteList }: ModalFormProps) => {
-  const { modalFormStore } = useModalFormStore();
-  const { title, items, itemNameError, titleError } = modalFormStore;
-  const {
-    handleTitle,
-    handleItemsName,
-    createListItem,
-    removeListItem,
-    handleInputError,
-  } = modalFormStore;
+const ModalForm = observer(
+  ({ user, closeAddForm, addVoteList }: ModalFormProps) => {
+    const { modalFormStore } = useModalFormStore();
+    const { title, items, itemNameError, titleError } = modalFormStore;
+    const {
+      handleTitle,
+      handleItemsName,
+      createListItem,
+      removeListItem,
+      handleInputError,
+    } = modalFormStore;
 
-  const handleSubmit = () => {
-    if (handleInputError()) {
-      return;
-    }
+    const handleSubmit = () => {
+      if (handleInputError()) {
+        return;
+      }
 
-    const newVote = {
-      title,
-      id: new Date().toLocaleString(),
-      items,
-      userId: "",
+      const newVote = {
+        id: "",
+        title,
+        items,
+        userId: user?.uid || "",
+      };
+
+      addVoteList(newVote);
+      closeAddForm();
     };
 
-    addVoteList(newVote);
-    closeAddForm();
-  };
-
-  return (
-    <ModalWrap>
-      <ModalBackground onClick={closeAddForm} />
-      <AddFormWrap>
-        <h2>투표 추가</h2>
-        <TitleWrap>
-          <LabelWrap>
-            <Label>제목</Label>
-            {titleError && <Required>{titleError}</Required>}
-          </LabelWrap>
-          <TextInputV2
-            placeholder="투표 주제"
-            value={title}
-            onChange={handleTitle}
-            width="100%"
-          />
-        </TitleWrap>
-        <ItemListWrap>
-          <LabelWrap>
-            <Label>투표 아이템리스트</Label>
-            {itemNameError && <Required>{itemNameError}</Required>}
-          </LabelWrap>
-          <ul>
-            {items.map((item, index) => {
-              return (
-                <li key={item.id}>
-                  <TextInputV2
-                    placeholder={`${index + 1}. 아이템 이름`}
-                    value={item.name}
-                    width="100%"
-                    maxLength={50}
-                    onChange={(value) => {
-                      handleItemsName(item.id, value);
-                    }}
-                  />
-                  <button
-                    className="removeBtn"
-                    type="button"
-                    onClick={() => {
-                      removeListItem(item.id);
-                    }}
-                  >
-                    삭제
-                  </button>
-                </li>
-              );
-            })}
+    return (
+      <ModalWrap>
+        <ModalBackground onClick={closeAddForm} />
+        <AddFormWrap>
+          <h2>투표 추가</h2>
+          <TitleWrap>
+            <LabelWrap>
+              <Label>제목</Label>
+              {titleError && <Required>{titleError}</Required>}
+            </LabelWrap>
+            <TextInputV2
+              placeholder="투표 주제"
+              value={title}
+              onChange={handleTitle}
+              width="100%"
+            />
+          </TitleWrap>
+          <ItemListWrap>
+            <LabelWrap>
+              <Label>투표 아이템리스트</Label>
+              {itemNameError && <Required>{itemNameError}</Required>}
+            </LabelWrap>
+            <ul>
+              {items.map((item, index) => {
+                return (
+                  <li key={item.id}>
+                    <TextInputV2
+                      placeholder={`${index + 1}. 아이템 이름`}
+                      value={item.name}
+                      width="100%"
+                      maxLength={50}
+                      onChange={(value) => {
+                        handleItemsName(item.id, value);
+                      }}
+                    />
+                    <button
+                      className="removeBtn"
+                      type="button"
+                      onClick={() => {
+                        removeListItem(item.id);
+                      }}
+                    >
+                      삭제
+                    </button>
+                  </li>
+                );
+              })}
+              <ButtonV2
+                className="createBtn"
+                style={{
+                  width: "100%",
+                  height: "30px",
+                  backgroundColor: "#1e85fa",
+                  color: "#fff",
+                  border: "none",
+                }}
+                onClick={createListItem}
+              >
+                +항목추가
+              </ButtonV2>
+            </ul>
+          </ItemListWrap>
+          <ButtonsWrap>
             <ButtonV2
               className="createBtn"
               style={{
-                width: "100%",
-                height: "30px",
+                width: "100px",
+                height: "40px",
+                backgroundColor: "#666",
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={closeAddForm}
+            >
+              취소
+            </ButtonV2>
+            <ButtonV2
+              className="createBtn"
+              style={{
+                width: "100px",
+                height: "40px",
                 backgroundColor: "#1e85fa",
                 color: "#fff",
                 border: "none",
               }}
-              onClick={createListItem}
+              onClick={handleSubmit}
             >
-              +항목추가
+              등록
             </ButtonV2>
-          </ul>
-        </ItemListWrap>
-        <ButtonsWrap>
-          <ButtonV2
-            className="createBtn"
-            style={{
-              width: "100px",
-              height: "40px",
-              backgroundColor: "#666",
-              color: "#fff",
-              border: "none",
-            }}
-            onClick={closeAddForm}
-          >
-            취소
-          </ButtonV2>
-          <ButtonV2
-            className="createBtn"
-            style={{
-              width: "100px",
-              height: "40px",
-              backgroundColor: "#1e85fa",
-              color: "#fff",
-              border: "none",
-            }}
-            onClick={handleSubmit}
-          >
-            등록
-          </ButtonV2>
-        </ButtonsWrap>
-      </AddFormWrap>
-    </ModalWrap>
-  );
-});
+          </ButtonsWrap>
+        </AddFormWrap>
+      </ModalWrap>
+    );
+  },
+);
 
 export default ModalForm;
 

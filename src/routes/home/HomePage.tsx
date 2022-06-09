@@ -1,65 +1,112 @@
-import {
-  Button,
-  SnackbarProps,
-  SnackbarV2,
-} from "@meshkorea/vroong-design-system-web";
-import React, { useCallback, useState } from "react";
+import { ButtonV2 } from "@meshkorea/vroong-design-system-web";
+import { observer } from "mobx-react";
+import React, { useCallback } from "react";
 import { hot } from "react-hot-loader/root";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
+import styled from "styled-components";
 
 import { useCore } from "core";
 
-const HomePage = (args: SnackbarProps) => {
+const HomePage = observer(() => {
   const core = useCore();
-  const [isToastOpen, setIsToastOpen] = useState(false);
+  const { isLoggedIn, user, logout, loginCheck } = core.googleAuth;
+  const history = useHistory();
 
-  const handleSnackbarOpen = useCallback(() => {
-    setIsToastOpen(true);
-  }, []);
+  const onLogin = useCallback(() => {
+    core.googleAuth.googleLogin();
+  }, [core.googleAuth]);
 
-  const handleSnackbarClose = useCallback(() => {
-    setIsToastOpen(false);
-  }, []);
-
-  const handleAlertOpen = useCallback(() => {
-    core.dialog.openAlert({
-      title: "Alert!",
-      message: "Alert은 이렇게 나옵니다.",
-    });
-  }, [core.dialog]);
-
-  const handleSpinner = useCallback(() => {
-    core.dialog.openSpinner();
-    setTimeout(() => {
-      core.dialog.closeSpinner();
-    }, 1000);
-  }, [core.dialog]);
-
-  return (
-    <div>
-      <div>
-        <h1>이곳은 홈페이지</h1>
-        <Button onClick={handleAlertOpen}>Open alert</Button>
-        <Button onClick={handleSpinner}>Open spinner</Button>
-        <Button onClick={handleSnackbarOpen}>토스트 출력</Button>
-        {isToastOpen ? (
-          <SnackbarV2
-            {...args}
-            text="이미 만료된 투표입니다."
-            onClose={handleSnackbarClose}
-          />
-        ) : null}
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-        </ul>
-      </div>
-    </div>
+  return loginCheck ? (
+    <HomeBodyWrap>
+      <Title
+        onClick={() => {
+          logout();
+        }}
+      >
+        {isLoggedIn ? `${user?.displayName}님 환영합니다` : "Mesh Draw"}
+      </Title>
+      <ButtonsWrap>
+        {isLoggedIn ? (
+          <>
+            <ButtonV2
+              onClick={() => {
+                history.push("/vote");
+              }}
+            >
+              투표하기
+            </ButtonV2>
+            <ButtonV2 disabled>미구현</ButtonV2>
+          </>
+        ) : (
+          <ButtonV2 className="login" onClick={onLogin}>
+            <img
+              src="https://img.icons8.com/color/48/undefined/google-logo.png"
+              alt="google_icon"
+            />
+            <span>google 로그인</span>
+          </ButtonV2>
+        )}
+      </ButtonsWrap>
+    </HomeBodyWrap>
+  ) : (
+    <></>
   );
-};
+});
 
 export default hot(HomePage);
+
+const HomeBodyWrap = styled.div`
+  width: 800px;
+
+  margin: 0 auto;
+  color: #303540;
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  button {
+    width: 200px;
+    height: 80px;
+    background-color: #ededed;
+    border: none;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+    font-size: 18px;
+    color: #333;
+  }
+
+  button:hover {
+    background-color: #d6d6d6 !important;
+  }
+`;
+
+const ButtonsWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 28px;
+      margin-right: 8px;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    padding: 0 10px;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 40px;
+  text-align: center;
+  margin: 20vh 0 40px;
+  color: #ededed;
+  text-shadow: 0 5px 11px #00000030;
+`;
