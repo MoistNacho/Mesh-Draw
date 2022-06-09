@@ -1,5 +1,5 @@
 {
-  "name": "mesh-web-boilerplate",
+  "name": "mesh-draw",
   "version": "2.0.0",
   "main": "index.js",
   "repository": "https://github.com/meshkorea/mesh-web-boilerplate",
@@ -109,6 +109,7 @@
     "dotenv": "^8.1.0",
     "dotenv-webpack": "^1.7.0",
     "file-loader": "^4.2.0",
+    "firebase": "^9.8.2",
     "fork-ts-checker-webpack-plugin": "^1.5.0",
     "html-webpack-plugin": "^3.2.0",
     "loadjs": "^4.2.0",
