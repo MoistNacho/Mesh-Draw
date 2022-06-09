@@ -1,4 +1,4 @@
-import { Alert } from "@meshkorea/vroong-design-system-web";
+import { AlertV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
 import React, { FC } from "react";
 
@@ -18,32 +18,20 @@ const AlertWrapper: FC = observer(() => {
   const core = useCore();
 
   const { isAlertShow, alertProps, closeAlert } = core.dialog!;
-  const {
-    title,
-    message,
-    showCancel,
-    onClose,
-    onConfirm,
-    cancelText = "취소",
-    confirmText,
-  } = alertProps;
+  const { title, message, onConfirm, confirmText = "확인" } = alertProps;
 
   const onClickConfirm = () => {
     if (onConfirm) onConfirm();
-    if (onClose) onClose();
     closeAlert();
   };
 
   return (
     <>
       {isAlertShow && (
-        <Alert
+        <AlertV2
           title={title}
           message={message}
-          showCancel={showCancel}
-          onClose={onClose}
           onConfirm={onClickConfirm}
-          cancelText={cancelText}
           confirmText={confirmText}
         />
       )}
