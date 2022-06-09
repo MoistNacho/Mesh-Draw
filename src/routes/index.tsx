@@ -8,9 +8,6 @@ import Layout from "../Layout";
 
 const HomePage = lazy(() => import("./home/HomePage"));
 const VotePage = lazy(() => import("./vote/VotePage"));
-const LoginPageProvider = lazy(() => import("./login/LoginPageProvider"));
-const WelcomePage = lazy(() => import("./welcome/WelcomePage"));
-const AuthorizePage = lazy(() => import("./authorize/AuthorizePage"));
 const NotFound = lazy(() => import("./NotFound"));
 
 const Routes = () => {
@@ -27,9 +24,6 @@ const Routes = () => {
         <Switch>
           <Route exact path="/(home)/" component={HomePage} />
           <Route path="/vote" component={VotePage} />
-          <Route path="/login" component={LoginPageProvider} />
-          <Route path="/welcome" component={WelcomePage} />
-          <Route path="/authorize" component={AuthorizePage} />
           <PrivateRoute
             path="/"
             component={() => (
