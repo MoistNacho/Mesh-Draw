@@ -85,7 +85,11 @@ export default class VoteStore {
         const docRef = doc(DB, "votes", info.id);
         const docSnap = await getDoc(docRef);
         const updateItems = docSnap.data()!.items as VoteItem[];
-        updateItems[targetId].like += 1;
+        updateItems.forEach((item, index) => {
+          if (item.id === targetId) {
+            updateItems[index].like += 1;
+          }
+        });
         const updateUsers = docSnap.data() as Vote;
         updateUsers.participants.push(email);
 
