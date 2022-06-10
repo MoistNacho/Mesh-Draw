@@ -1,7 +1,5 @@
 .DS_Store
 .eslintcache
-.npmrc
-.sentryclirc
 *.log
 coverage
 cypress/screenshots
