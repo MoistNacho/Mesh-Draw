@@ -36,6 +36,8 @@ const ModalForm = observer(
         title,
         items,
         userId: user?.uid || "",
+        createdAt: new Date().valueOf(),
+        participants: [],
       };
 
       addVoteList(newVote);

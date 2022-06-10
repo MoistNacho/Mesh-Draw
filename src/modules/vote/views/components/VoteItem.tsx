@@ -1,31 +1,59 @@
 import { ButtonV2, IconV2, RadioV2 } from "@meshkorea/vroong-design-system-web";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import { UserType } from "core/services/FireBase";
 
-import { Vote } from "../../VoteStore";
+import { Vote, VoteItem } from "../../VoteStore";
 
 interface VoteItemProps {
   user: UserType;
   voteInfo: Vote;
   removeVoteList(id: string): void;
+  handleVoting(info: Vote, targetId: number, email: string): void;
 }
 
-const VoteItem = ({ user, voteInfo, removeVoteList }: VoteItemProps) => {
-  const [isChecked, setIsChecked] = useState<string>();
+const VoteItem = ({
+  user,
+  voteInfo,
+  removeVoteList,
+  handleVoting,
+}: VoteItemProps) => {
+  const email = user?.email ? user.email : "";
+  const [isSelect, setIsSelect] = useState<number>();
   const [openStatistics, setOpenStatistics] = useState<boolean>(false);
+  const [errorSelect, setErrorSelect] = useState<string>("");
   const statisticsTotal = voteInfo.items.reduce<number>(
     (a, b) => a + b.like,
     0,
   );
 
-  const handleOptionCheck = (value: string) => {
-    setIsChecked(value);
-  };
+  const onVote = useCallback(() => {
+    if (isSelect !== undefined) {
+      handleVoting(voteInfo, isSelect, email);
+    } else {
+      setErrorSelect("투표 항목을 선택해주세요!");
+    }
+  }, [handleVoting, isSelect, voteInfo, email]);
+
+  const handleOptionCheck = useCallback(
+    (value: number) => {
+      if (errorSelect) {
+        setErrorSelect("");
+      }
+      setIsSelect(value);
+    },
+    [errorSelect],
+  );
 
   const handleStatistics = () => {
     setOpenStatistics(!openStatistics);
+  };
+
+  const handleRemove = () => {
+    if (user?.uid !== voteInfo.userId) return;
+
+    removeVoteList(voteInfo.id);
   };
 
   return (
@@ -41,9 +69,7 @@ const VoteItem = ({ user, voteInfo, removeVoteList }: VoteItemProps) => {
             width="30px"
             height="30px"
             color="#ff4949"
-            onClick={() => {
-              removeVoteList(voteInfo.id);
-            }}
+            onClick={handleRemove}
           />
         )}
       </div>
@@ -73,20 +99,26 @@ const VoteItem = ({ user, voteInfo, removeVoteList }: VoteItemProps) => {
             {voteInfo.items.map((item) => {
               return (
                 <li key={item.id}>
-                  <RadioV2
-                    id={item.name}
-                    label={item.name}
-                    value={item.name}
-                    checked={isChecked === item.name}
-                    onChange={handleOptionCheck}
-                    className="radio"
-                  />
+                  <div
+                    onClick={() => {
+                      handleOptionCheck(item.id);
+                    }}
+                  >
+                    <RadioV2
+                      id={item.name}
+                      label={item.name}
+                      value={item.name}
+                      checked={isSelect === item.id}
+                      className="radio"
+                    />
+                  </div>
                 </li>
               );
             })}
           </OptionList>
         )}
       </BodyWrap>
+      {errorSelect && <ErrorMessage>{errorSelect}</ErrorMessage>}
       <ButtonsWrap>
         <ButtonV2
           style={{
@@ -109,6 +141,7 @@ const VoteItem = ({ user, voteInfo, removeVoteList }: VoteItemProps) => {
             border: "none",
             display: openStatistics ? "none" : "block",
           }}
+          onClick={onVote}
         >
           투표
         </ButtonV2>
@@ -168,6 +201,18 @@ const BodyWrap = styled.div`
     li:last-child {
       margin-bottom: 0;
     }
+  }
+`;
+
+const ErrorMessage = styled.p`
+  text-align: center;
+  font-size: 14px;
+  margin: 4px 0;
+  color: #ff4949;
+
+  ::before {
+    display: inline;
+    content: "⚠ ";
   }
 `;
 

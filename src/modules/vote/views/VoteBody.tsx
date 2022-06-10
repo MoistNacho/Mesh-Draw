@@ -1,6 +1,6 @@
 import { ButtonV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { ModalFormProvider, ModalForm } from "../../modalForm";
@@ -10,19 +10,41 @@ import VoteItem from "./components/VoteItem";
 
 const VoteBody = observer(() => {
   const { voteStore } = useVoteStore();
-  const { voteList, addVoteList, removeVoteList } = voteStore;
+  const {
+    voteList,
+    getVoteList,
+    addVoteList,
+    removeVoteList,
+    handleVoting,
+    core,
+  } = voteStore;
+  const { user, loginCheck } = core.googleAuth;
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!loginCheck) {
+      core.dialog.openSpinner();
+    } else {
+      core.dialog.closeSpinner();
+      getVoteList();
+    }
+  }, [core.dialog, loginCheck, getVoteList]);
 
   const closeAddForm = () => {
     setOpenAddForm(false);
   };
 
-  return (
+  return loginCheck ? (
     <VoteBodyWrap>
       <TopWrap>
         <ButtonV2
-          status="primary"
-          style={{ width: "200px", height: "40px", backgroundColor: "#14BE7D" }}
+          style={{
+            width: "200px",
+            height: "40px",
+            backgroundColor: "#14BE7D",
+            border: "none",
+            color: "#fff",
+          }}
           onClick={() => {
             setOpenAddForm(true);
           }}
@@ -34,19 +56,27 @@ const VoteBody = observer(() => {
         {voteList.map((voteInfo) => {
           return (
             <VoteItem
-              key={voteInfo.id}
+              key={voteInfo.title}
+              user={user}
               voteInfo={voteInfo}
               removeVoteList={removeVoteList}
+              handleVoting={handleVoting}
             />
           );
         })}
       </VoteListSection>
       {openAddForm && (
         <ModalFormProvider>
-          <ModalForm closeAddForm={closeAddForm} addVoteList={addVoteList} />
+          <ModalForm
+            closeAddForm={closeAddForm}
+            addVoteList={addVoteList}
+            user={user}
+          />
         </ModalFormProvider>
       )}
     </VoteBodyWrap>
+  ) : (
+    <></>
   );
 });
 
@@ -56,7 +86,6 @@ const VoteBodyWrap = styled.div`
   /* border-left: 3px solid #558bca;
   border-right: 3px solid #558bca; */
   height: 100%;
-  margin: 0 auto;
   color: #303540;
 
   @media screen and (max-width: 800px) {
@@ -64,8 +93,8 @@ const VoteBodyWrap = styled.div`
   }
 `;
 
-const TopWrap = styled.div`
-  height: 120px;
+const TopWrap = styled.section`
+  margin: 40px 0;
   display: flex;
   align-items: center;
   justify-content: center;
