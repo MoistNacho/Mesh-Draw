@@ -22,13 +22,14 @@ export default SpinnerWrapper;
 
 const Custom = styled.div`
   svg {
-    /* background-color: #fff;
-    border-radius: 50%; */
+    background-color: #435d7a40;
+    border-radius: 50%;
+    border: 4px solid #435d7a40;
     path:nth-child(1) {
       fill: #fff;
     }
     path:nth-child(2) {
-      fill: #435d7a;
+      fill: #59789a;
     }
   }
 `;
