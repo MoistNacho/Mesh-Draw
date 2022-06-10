@@ -10,12 +10,12 @@ export type UserType = User | null;
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCXBCMsayXV1fB3d3dlQRSZh7BoKG9_diE",
-  authDomain: "voteservice-b6168.firebaseapp.com",
-  projectId: "voteservice-b6168",
-  storageBucket: "voteservice-b6168.appspot.com",
-  messagingSenderId: "111840206951",
-  appId: "1:111840206951:web:83cd1eb5908a1c9a13f4c2",
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
