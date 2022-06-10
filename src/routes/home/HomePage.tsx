@@ -9,22 +9,24 @@ import { useCore } from "core";
 
 const HomePage = observer(() => {
   const core = useCore();
-  const { isLoggedIn, user, logout, loginCheck } = core.googleAuth;
+  const { isLoggedIn, user, logout } = core.googleAuth;
   const history = useHistory();
 
   const onLogin = useCallback(() => {
     core.googleAuth.googleLogin();
   }, [core.googleAuth]);
 
-  return loginCheck ? (
+  return (
     <HomeBodyWrap>
-      <Title
-        onClick={() => {
-          logout();
-        }}
-      >
-        {isLoggedIn ? `${user?.displayName}님 환영합니다` : "Mesh Draw"}
-      </Title>
+      <Title>Mesh Draw</Title>
+      {isLoggedIn && (
+        <UserTitle>
+          <h2>{user?.displayName}님 환영합니다</h2>
+          <button type="button" onClick={logout}>
+            Logout
+          </button>
+        </UserTitle>
+      )}
       <ButtonsWrap>
         {isLoggedIn ? (
           <>
@@ -48,8 +50,6 @@ const HomePage = observer(() => {
         )}
       </ButtonsWrap>
     </HomeBodyWrap>
-  ) : (
-    <></>
   );
 });
 
@@ -65,6 +65,13 @@ const HomeBodyWrap = styled.div`
     width: 100%;
     padding: 0 10px;
   }
+`;
+
+const ButtonsWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
 
   button {
     width: 200px;
@@ -79,12 +86,6 @@ const HomeBodyWrap = styled.div`
   button:hover {
     background-color: #d6d6d6 !important;
   }
-`;
-
-const ButtonsWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   .login {
     display: flex;
@@ -106,7 +107,31 @@ const ButtonsWrap = styled.div`
 const Title = styled.h1`
   font-size: 40px;
   text-align: center;
-  margin: 20vh 0 40px;
+  margin: 20vh 0 0;
   color: #ededed;
   text-shadow: 0 5px 11px #00000030;
+`;
+
+const UserTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 0;
+
+  h2 {
+    font-size: 28px;
+    margin: 0;
+    color: #ededed;
+    text-shadow: 0 5px 11px #00000030;
+  }
+
+  button {
+    height: 42px;
+    margin-left: 12px;
+    color: #c73b3b;
+    border: none;
+    outline: none;
+  }
+  button:hover {
+    color: #c25d5d;
+  }
 `;
