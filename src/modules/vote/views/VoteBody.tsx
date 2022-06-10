@@ -83,8 +83,6 @@ const VoteBody = observer(() => {
 export default VoteBody;
 
 const VoteBodyWrap = styled.div`
-  /* border-left: 3px solid #558bca;
-  border-right: 3px solid #558bca; */
   height: 100%;
   color: #303540;
 
