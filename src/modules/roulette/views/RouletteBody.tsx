@@ -195,7 +195,7 @@ const ResultSection = styled.section`
     margin: 0 0 10px;
     font-size: 22px;
     line-height: 22px;
-    color: #166fe4;
+    color: #428ced;
   }
 
   p {
