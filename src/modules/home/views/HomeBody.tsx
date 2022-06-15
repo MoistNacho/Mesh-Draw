@@ -36,7 +36,13 @@ const HomeBody = observer(() => {
             >
               투표하기
             </ButtonV2>
-            <ButtonV2 disabled>미구현</ButtonV2>
+            <ButtonV2
+              onClick={() => {
+                history.push("/roulette");
+              }}
+            >
+              돌림판
+            </ButtonV2>
           </>
         ) : (
           <ButtonV2 className="login" onClick={onLogin}>

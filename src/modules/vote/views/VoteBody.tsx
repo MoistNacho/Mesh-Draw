@@ -69,8 +69,9 @@ const VoteBody = observer(() => {
         <ModalFormProvider>
           <ModalForm
             closeAddForm={closeAddForm}
-            addVoteList={addVoteList}
+            addList={addVoteList}
             user={user}
+            modalType="vote"
           />
         </ModalFormProvider>
       )}

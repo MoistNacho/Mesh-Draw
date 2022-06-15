@@ -4,18 +4,20 @@ import React from "react";
 import styled from "styled-components";
 
 import { UserType } from "core/services/FireBase";
+import { Roulette } from "modules/roulette/RouletteStore";
 import { Vote } from "modules/vote/VoteStore";
 
 import { useModalFormStore } from "../ModalFormProvider";
 
 interface ModalFormProps {
-  user: UserType;
+  user?: UserType;
   closeAddForm: VoidFunction;
-  addVoteList(voteItem: Vote): void;
+  addList(item: Vote | Roulette): void;
+  modalType: "vote" | "roulette";
 }
 
 const ModalForm = observer(
-  ({ user, closeAddForm, addVoteList }: ModalFormProps) => {
+  ({ user, closeAddForm, addList, modalType }: ModalFormProps) => {
     const { modalFormStore } = useModalFormStore();
     const { title, items, itemNameError, titleError } = modalFormStore;
     const {
@@ -31,16 +33,30 @@ const ModalForm = observer(
         return;
       }
 
-      const newVote = {
-        id: "",
-        title,
-        items,
-        userId: user?.uid || "",
-        createdAt: new Date().valueOf(),
-        participants: [],
-      };
+      if (modalType === "vote") {
+        const newVote: Vote = {
+          id: "",
+          title,
+          items,
+          userId: user?.uid || "",
+          createdAt: new Date().valueOf(),
+          participants: [],
+        };
 
-      addVoteList(newVote);
+        addList(newVote);
+      } else {
+        const rouletteItems = items.map((i) => {
+          return { id: i.id, option: i.name };
+        });
+        const newRoulette: Roulette = {
+          id: "",
+          title,
+          items: rouletteItems,
+          createdAt: new Date().valueOf(),
+        };
+        addList(newRoulette);
+      }
+
       closeAddForm();
     };
 
@@ -48,14 +64,16 @@ const ModalForm = observer(
       <ModalWrap>
         <ModalBackground onClick={closeAddForm} />
         <AddFormWrap>
-          <h2>투표 추가</h2>
+          <h2>
+            {modalType === "vote" ? "새 투표 만들기" : "새 돌림판 만들기"}
+          </h2>
           <TitleWrap>
             <LabelWrap>
               <Label>제목</Label>
               {titleError && <Required>{titleError}</Required>}
             </LabelWrap>
             <TextInputV2
-              placeholder="투표 주제"
+              placeholder="주제를 입력하세요"
               value={title}
               onChange={handleTitle}
               width="100%"
@@ -63,7 +81,7 @@ const ModalForm = observer(
           </TitleWrap>
           <ItemListWrap>
             <LabelWrap>
-              <Label>투표 아이템리스트</Label>
+              <Label>아이템 리스트</Label>
               {itemNameError && <Required>{itemNameError}</Required>}
             </LabelWrap>
             <ul>
@@ -145,6 +163,7 @@ export default ModalForm;
 const ModalWrap = styled.div`
   position: fixed;
   top: 0;
+  z-index: 100;
   width: 100%;
   height: 100%;
   display: flex;

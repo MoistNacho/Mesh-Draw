@@ -8,6 +8,7 @@ import Layout from "../Layout";
 
 const HomePage = lazy(() => import("./home/HomePage"));
 const VotePage = lazy(() => import("./vote/VotePage"));
+const RoulettePage = lazy(() => import("./roulette/RoulettePage"));
 const NotFound = lazy(() => import("./NotFound"));
 
 const Routes = () => {
@@ -24,6 +25,7 @@ const Routes = () => {
         <Switch>
           <Route exact path="/(home)/" component={HomePage} />
           <Route path="/vote" component={VotePage} />
+          <Route path="/roulette" component={RoulettePage} />
           <PrivateRoute
             path="/"
             component={() => (
