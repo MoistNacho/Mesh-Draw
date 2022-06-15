@@ -103,6 +103,7 @@ const ModalForm = observer(
                       onClick={() => {
                         removeListItem(item.id);
                       }}
+                      tabIndex={-1}
                     >
                       삭제
                     </button>
