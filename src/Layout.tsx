@@ -4,6 +4,7 @@ import React from "react";
 import Div100vh from "react-div-100vh";
 
 import AlertWrapper from "components/AlertWrapper";
+import Navigation from "components/Navigation/Navigation";
 import SpinnerWrapper from "components/SpinnerWrapper";
 
 interface LayoutProps {
@@ -16,6 +17,7 @@ const Layout = observer(({ children }: LayoutProps) => {
       {children}
       <AlertWrapper />
       <SpinnerWrapper />
+      <Navigation />
     </Div100vh>
   );
 });
