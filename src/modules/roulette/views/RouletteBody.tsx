@@ -1,4 +1,4 @@
-import { ButtonV2 } from "@meshkorea/vroong-design-system-web";
+import { ButtonV2, IconV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { Wheel } from "react-custom-roulette";
@@ -6,6 +6,8 @@ import styled from "styled-components";
 
 import { ModalFormProvider, ModalForm } from "../../modalForm";
 import { useRouletteStore } from "../RouletteProvider";
+
+import HistoryModal from "./component/HistoryModal";
 
 const rouletteColors = [
   "#ee3a43",
@@ -22,13 +24,30 @@ const rouletteColors = [
 
 const RouletteBody = observer(() => {
   const { rouletteStore } = useRouletteStore();
-  const { rouletteWheel, mustSpin, prizeNum, drawResult } = rouletteStore;
-  const { addRouletteList, handleSpinClick, handleSpinStop } = rouletteStore;
+  const {
+    rouletteWheel,
+    mustSpin,
+    prizeNum,
+    drawResult,
+    historyList,
+    historyLoading,
+  } = rouletteStore;
+  const {
+    addRouletteList,
+    handleSpinClick,
+    handleSpinStop,
+    getHistory,
+  } = rouletteStore;
 
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
+  const [openHistory, setOpenHistory] = useState<boolean>(false);
 
   const closeAddForm = () => {
     setOpenAddForm(false);
+  };
+
+  const closeHistoryModal = () => {
+    setOpenHistory(false);
   };
 
   return (
@@ -49,6 +68,23 @@ const RouletteBody = observer(() => {
           돌림판 추가
         </ButtonV2>
       </TopWrap>
+      <HistoryWrap>
+        <ButtonV2
+          style={{
+            width: "120px",
+            height: "30px",
+            backgroundColor: "#fff",
+            color: "#666",
+            border: "none",
+          }}
+          onClick={() => {
+            setOpenHistory(true);
+          }}
+        >
+          <IconV2 name="HISTORY" width="20px" height="20px" color="#666" />{" "}
+          History
+        </ButtonV2>
+      </HistoryWrap>
       <WheelSection>
         {rouletteWheel ? (
           <WheelWrap>
@@ -56,7 +92,7 @@ const RouletteBody = observer(() => {
             <Wheel
               mustStartSpinning={mustSpin}
               prizeNumber={prizeNum}
-              spinDuration={0.35}
+              spinDuration={0.7}
               data={rouletteWheel.items}
               outerBorderColor="#5c5c5c"
               outerBorderWidth={8}
@@ -103,6 +139,15 @@ const RouletteBody = observer(() => {
             addList={addRouletteList}
           />
         </ModalFormProvider>
+      )}
+      {openHistory && (
+        <HistoryModal
+          historyList={historyList}
+          historyLoading={historyLoading}
+          getHistory={getHistory}
+          closeHistoryModal={closeHistoryModal}
+          addRouletteList={addRouletteList}
+        />
       )}
     </RouletteBodyWrap>
   );
@@ -208,6 +253,21 @@ const ResultSection = styled.section`
   }
 
   @media screen and (max-width: 600px) {
+    width: 100%;
+  }
+`;
+
+const HistoryWrap = styled.div`
+  width: 800px;
+  margin: 0 auto 10px;
+  display: flex;
+  justify-content: right;
+
+  button {
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 18%), 0 4px 8px 0 rgb(0 0 0 / 15%);
+  }
+
+  @media screen and (max-width: 800px) {
     width: 100%;
   }
 `;

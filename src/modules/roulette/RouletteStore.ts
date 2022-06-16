@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { action, observable } from "mobx";
 import { WheelDataType } from "react-custom-roulette";
 
 import Core from "core";
+import { DB } from "core/services/FireBase";
 
 export interface Roulette {
   id: string;
@@ -23,6 +25,9 @@ export default class RouletteStore {
   public rouletteWheel: Roulette;
 
   @observable
+  public historyList: Roulette[];
+
+  @observable
   public mustSpin = false;
 
   @observable
@@ -31,13 +36,24 @@ export default class RouletteStore {
   @observable
   public drawResult: string;
 
+  @observable
+  public historyLoading = false;
+
   constructor(core: Core) {
     this.core = core;
   }
 
   @action.bound
-  public addRouletteList(item: Roulette) {
-    this.rouletteWheel = item;
+  public async addRouletteList(item: Roulette, isUpload = true) {
+    try {
+      this.rouletteWheel = item;
+      this.drawResult = "";
+      if (isUpload) {
+        await addDoc(collection(DB, "roulettes"), item);
+      }
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   }
 
   @action.bound
@@ -53,5 +69,23 @@ export default class RouletteStore {
   public handleSpinStop() {
     this.mustSpin = false;
     this.drawResult = this.rouletteWheel.items[this.prizeNum].option;
+  }
+
+  @action.bound
+  public async getHistory() {
+    try {
+      this.historyLoading = true;
+      const result = await getDocs(collection(DB, "roulettes"));
+      const getList = result.docs.map((item) => {
+        return { ...item.data(), id: item.id } as Roulette;
+      });
+      getList.sort((a, b) => b.createdAt - a.createdAt);
+
+      this.historyList = getList;
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    } finally {
+      this.historyLoading = false;
+    }
   }
 }
