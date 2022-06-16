@@ -7,13 +7,13 @@ const Navigation = () => {
   const location = useLocation();
 
   return (
-    location.pathname !== "/home" && (
-      <NavWraper>
+    <NavWraper>
+      {location.pathname !== "/home" && (
         <Link to="/home">
           <IconV2 name="HOME" color="#fff" />
         </Link>
-      </NavWraper>
-    )
+      )}
+    </NavWraper>
   );
 };
 
