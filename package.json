@@ -1,6 +1,6 @@
 {
   "name": "mesh-draw",
-  "version": "1.0",
+  "version": "1.1.0",
   "main": "index.js",
   "repository": "https://github.com/MoistNacho/Mesh-Draw",
   "author": "Mesh Korea",
@@ -90,7 +90,6 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "@babel/runtime-corejs3": "^7.7.7",
-    "@meshkorea/cake-form": "2.3.2",
     "@meshkorea/vroong-design-system-web": "2.2.19-add-className-clear-icon",
     "@openapitools/openapi-generator-cli": "^2.1.18",
     "axios": "^0.20.0",

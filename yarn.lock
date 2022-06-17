@@ -2939,16 +2939,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@meshkorea/cake-form@2.3.2":
-  version "2.3.2"
-  resolved "https://npm.pkg.github.com/download/@meshkorea/cake-form/2.3.2/8b10defba95f83131894453511a73ebf3f2ee5f1d93f4117eb4899971d924876#b8f60e56c075ad1bf715b35d5d84b4460f2ad51e"
-  integrity sha512-CuoTchZRMnb9as0hpF/7sRWP/uWx3SAQpJrnsJ0mF0COnCIAeOPUsxfC+qFYmfhpaVkfm/9cO8dB3OJ7ogg+Sg==
-  dependencies:
-    debounce-promise "^3.1.0"
-    debug "^4.1.1"
-    lodash-es "^4.17.11"
-    mobx "^5.8.0"
-
 "@meshkorea/vroong-design-system-web@2.2.19-add-className-clear-icon":
   version "2.2.19-add-className-clear-icon"
   resolved "https://npm.pkg.github.com/download/@meshkorea/vroong-design-system-web/2.2.19-add-className-clear-icon/ed05ce468b6551d36afa06c227f3ffcf5ccace5b46ac81ae73a2507e4376d3db#8dda39b03f690fae9339c263c84d64d9b07d0faa"
@@ -6774,11 +6764,6 @@ date-fns@^2.13.0, date-fns@^2.16.1:
   version "2.16.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz#05775792c3f3331da812af253e1a935851d3834b"
   integrity sha512-sAJVKx/FqrLYHAQeN7VpJrPhagZc9R4ImZIWYRFZaaohR3KzmuK88touwsSwSVT8Qcbd4zoDsnGfX4GFB4imyQ==
-
-debounce-promise@^3.1.0:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/debounce-promise/-/debounce-promise-3.1.2.tgz#320fb8c7d15a344455cd33cee5ab63530b6dc7c5"
-  integrity sha512-rZHcgBkbYavBeD9ej6sP56XfG53d51CD4dnaw989YX/nZ/ZJfgRx/9ePKmTNiUiyQvh4mtrMoS3OAWW+yoYtpg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
@@ -12044,7 +12029,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.11, lodash-es@^4.17.15:
+lodash-es@^4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
   integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
@@ -12722,7 +12707,7 @@ mobx@^4.2.0:
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
   integrity sha512-X4uQvuf2zYKHVO5kRT5Utmr+J9fDnRgxWWnSqJ4oiccPTQU38YG+/O3nPmOhUy4jeHexl7XJJpWDBgEnEfp+8w==
 
-mobx@^5.15.7, mobx@^5.8.0:
+mobx@^5.15.7:
   version "5.15.7"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.7.tgz#b9a5f2b6251f5d96980d13c78e9b5d8d4ce22665"
   integrity sha512-wyM3FghTkhmC+hQjyPGGFdpehrcX1KOXsDuERhfK2YbJemkUhEB+6wzEN639T21onxlfYBmriA1PFnvxTUhcKw==
