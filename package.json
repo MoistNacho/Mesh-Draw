@@ -47,7 +47,7 @@
     "@types/jest": "^26.0.14",
     "@types/loadjs": "^3.5.0",
     "@types/lodash-es": "^4.17.3",
-    "@types/react": "^16.9.9",
+    "@types/react": "^18.0.14",
     "@types/react-dom": "^16.9.1",
     "@types/react-helmet": "^5.0.11",
     "@types/react-router": "^5.1.1",

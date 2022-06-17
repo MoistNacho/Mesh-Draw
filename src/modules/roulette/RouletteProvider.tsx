@@ -9,11 +9,15 @@ export interface RouletteContext {
   rouletteStore: RouletteStore;
 }
 
+interface Props {
+  children: React.ReactNode;
+}
+
 const LocalContext = React.createContext<RouletteContext | null>(null);
 
 export const useRouletteStore = generateUseContext(LocalContext);
 
-const VoteProvider: React.FC = ({ children }) => {
+const VoteProvider: React.FC<Props> = ({ children }) => {
   const core = useCore();
 
   const [stores] = React.useState<RouletteContext>(() => ({
