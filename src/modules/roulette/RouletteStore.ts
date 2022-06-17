@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { action, observable } from "mobx";
-import { WheelDataType } from "react-custom-roulette";
 
 import Core from "core";
 import { DB } from "core/services/FireBase";
+
+import { WheelDataType } from "../../components/CustomWheel";
 
 export interface Roulette {
   id: string;

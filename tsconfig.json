@@ -24,7 +24,9 @@
       "ES2018.Intl"
     ],
     "jsx": "react",
-    "typeRoots": ["@types", "node_modules/@types"]
+    "typeRoots": ["@types", "node_modules/@types"],
+    "allowJs": true,
+    "checkJs": false
   },
   "include": ["src/**/*", "@types/**/*"]
 }

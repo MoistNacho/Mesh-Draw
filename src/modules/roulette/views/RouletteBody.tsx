@@ -1,9 +1,9 @@
 import { ButtonV2, IconV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
-import { Wheel } from "react-custom-roulette";
 import styled from "styled-components";
 
+import { Wheel } from "../../../components/CustomWheel";
 import { ModalFormProvider, ModalForm } from "../../modalForm";
 import { useRouletteStore } from "../RouletteProvider";
 
@@ -32,12 +32,8 @@ const RouletteBody = observer(() => {
     historyList,
     historyLoading,
   } = rouletteStore;
-  const {
-    addRouletteList,
-    handleSpinClick,
-    handleSpinStop,
-    getHistory,
-  } = rouletteStore;
+  const { addRouletteList, handleSpinClick, handleSpinStop, getHistory } =
+    rouletteStore;
 
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
   const [openHistory, setOpenHistory] = useState<boolean>(false);
