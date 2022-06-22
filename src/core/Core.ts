@@ -1,14 +1,11 @@
 import { observable } from "mobx";
 
-import Auth from "./Auth";
 import Dialog from "./Dialog";
 import GoogleAuth from "./GoogleAuth";
 import PopUp from "./PopUp";
 import Router from "./Router";
 
 export default class Core {
-  public auth: Auth;
-
   public dialog: Dialog;
 
   public router: Router;
@@ -25,7 +22,6 @@ export default class Core {
   } = {};
 
   constructor() {
-    this.auth = new Auth(this);
     this.dialog = new Dialog();
     this.router = new Router();
     this.popUp = new PopUp();
