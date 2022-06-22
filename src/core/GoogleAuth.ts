@@ -16,9 +16,6 @@ export default class GoogleAuth {
   @observable
   public user: User | null;
 
-  @observable
-  public loginCheck = false;
-
   constructor(core: Core) {
     this.core = core;
   }
@@ -56,7 +53,6 @@ export default class GoogleAuth {
   public setUser = () => {
     onAuthStateChanged(fbAuth, (result) => {
       this.user = result;
-      this.loginCheck = true;
     });
   };
 }
