@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { ModalFormProvider, ModalForm } from "../../modalForm";
 import { useVoteStore } from "../VoteProvider";
 
+import SkeletonItems from "./components/SkeletonItems";
 import VoteItem from "./components/VoteItem";
 
 const VoteBody = observer(() => {
@@ -17,24 +18,22 @@ const VoteBody = observer(() => {
     removeVoteList,
     handleVoting,
     core,
+    listLoaded,
   } = voteStore;
-  const { user, loginCheck } = core.googleAuth;
+  const { user } = core.googleAuth;
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!loginCheck) {
-      core.dialog.openSpinner();
-    } else {
-      core.dialog.closeSpinner();
+    if (user) {
       getVoteList();
     }
-  }, [core.dialog, loginCheck, getVoteList]);
+  }, [getVoteList, user]);
 
   const closeAddForm = () => {
     setOpenAddForm(false);
   };
 
-  return loginCheck ? (
+  return (
     <VoteBodyWrap>
       <TopWrap>
         <ButtonV2
@@ -53,17 +52,21 @@ const VoteBody = observer(() => {
         </ButtonV2>
       </TopWrap>
       <VoteListSection>
-        {voteList.map((voteInfo) => {
-          return (
-            <VoteItem
-              key={voteInfo.title}
-              user={user}
-              voteInfo={voteInfo}
-              removeVoteList={removeVoteList}
-              handleVoting={handleVoting}
-            />
-          );
-        })}
+        {listLoaded ? (
+          voteList.map((voteInfo) => {
+            return (
+              <VoteItem
+                key={voteInfo.title}
+                user={user}
+                voteInfo={voteInfo}
+                removeVoteList={removeVoteList}
+                handleVoting={handleVoting}
+              />
+            );
+          })
+        ) : (
+          <SkeletonItems />
+        )}
       </VoteListSection>
       {openAddForm && (
         <ModalFormProvider>
@@ -76,8 +79,6 @@ const VoteBody = observer(() => {
         </ModalFormProvider>
       )}
     </VoteBodyWrap>
-  ) : (
-    <></>
   );
 });
 

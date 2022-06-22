@@ -122,6 +122,7 @@
     "react-helmet": "^6.1.0",
     "react-hot-loader": "^4.12.18",
     "react-intl": "^5.8.2",
+    "react-loading-skeleton": "^3.1.0",
     "react-responsive-picture": "^3.1.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",

@@ -35,6 +35,9 @@ export default class VoteStore {
   public voteList: Vote[] = [];
 
   @observable
+  public listLoaded = false;
+
+  @observable
   private loading = false;
 
   constructor(core: Core) {
@@ -43,13 +46,19 @@ export default class VoteStore {
 
   @action.bound
   public async getVoteList() {
-    const result = await getDocs(collection(DB, "votes"));
-    const getList = result.docs.map((item) => {
-      return { ...item.data(), id: item.id } as Vote;
-    });
-    getList.sort((a, b) => b.createdAt - a.createdAt);
+    try {
+      const result = await getDocs(collection(DB, "votes"));
+      const getList = result.docs.map((item) => {
+        return { ...item.data(), id: item.id } as Vote;
+      });
+      getList.sort((a, b) => b.createdAt - a.createdAt);
 
-    this.voteList = getList;
+      this.voteList = getList;
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    } finally {
+      this.listLoaded = true;
+    }
   }
 
   @action.bound
