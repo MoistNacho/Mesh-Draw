@@ -29,6 +29,9 @@ export default class RouletteStore {
   public historyList: Roulette[];
 
   @observable
+  public animationPlay = false;
+
+  @observable
   public mustSpin = false;
 
   @observable
@@ -59,6 +62,8 @@ export default class RouletteStore {
 
   @action.bound
   public handleSpinClick() {
+    if (this.mustSpin === true) return;
+
     const newPrizeNum = Math.floor(
       Math.random() * this.rouletteWheel.items.length,
     );
@@ -70,6 +75,10 @@ export default class RouletteStore {
   public handleSpinStop() {
     this.mustSpin = false;
     this.drawResult = this.rouletteWheel.items[this.prizeNum].option;
+    this.animationPlay = true;
+    setTimeout(() => {
+      this.animationPlay = false;
+    }, 3000);
   }
 
   @action.bound

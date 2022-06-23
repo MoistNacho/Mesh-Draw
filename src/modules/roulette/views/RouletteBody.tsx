@@ -1,8 +1,10 @@
 import { ButtonV2, IconV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import Lottie from "react-lottie-player";
 import styled from "styled-components";
 
+import lottieJson from "../../../assets/lottie/roulette-congrats.json";
 import { Wheel } from "../../../components/CustomWheel";
 import { ModalFormProvider, ModalForm } from "../../modalForm";
 import { useRouletteStore } from "../RouletteProvider";
@@ -25,18 +27,28 @@ const rouletteColors = [
 const RouletteBody = observer(() => {
   const { rouletteStore } = useRouletteStore();
   const {
+    core,
     rouletteWheel,
     mustSpin,
     prizeNum,
     drawResult,
     historyList,
     historyLoading,
+    animationPlay,
   } = rouletteStore;
   const { addRouletteList, handleSpinClick, handleSpinStop, getHistory } =
     rouletteStore;
 
+  const { googleAuth } = core;
+
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
   const [openHistory, setOpenHistory] = useState<boolean>(false);
+
+  const handleOpenAddForm = useCallback(() => {
+    if (googleAuth.loginCheck()) {
+      setOpenAddForm(true);
+    }
+  }, [googleAuth]);
 
   const closeAddForm = () => {
     setOpenAddForm(false);
@@ -57,9 +69,7 @@ const RouletteBody = observer(() => {
             border: "none",
             color: "#fff",
           }}
-          onClick={() => {
-            setOpenAddForm(true);
-          }}
+          onClick={handleOpenAddForm}
         >
           돌림판 추가
         </ButtonV2>
@@ -114,18 +124,31 @@ const RouletteBody = observer(() => {
             >
               {drawResult ? "다시 돌리기" : "돌리기"}
             </ButtonV2>
+            {drawResult && (
+              <ResultWrap>
+                {/* eslint-disable-next-line jsx-a11y/accessible-emoji */}
+                <h3>🎉 당 첨 🎉</h3>
+                <p>{drawResult}</p>
+              </ResultWrap>
+            )}
+            {animationPlay && (
+              <LottieWrap>
+                <Lottie
+                  loop
+                  animationData={lottieJson}
+                  play
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </LottieWrap>
+            )}
           </WheelWrap>
         ) : (
           <Empty>설정된 룰렛이 없습니다. 새로 등록해주세요</Empty>
         )}
       </WheelSection>
-      {drawResult && (
-        <ResultSection>
-          {/* eslint-disable-next-line jsx-a11y/accessible-emoji */}
-          <h3>🎉 당 첨 🎉</h3>
-          <p>{drawResult}</p>
-        </ResultSection>
-      )}
 
       {openAddForm && (
         <ModalFormProvider>
@@ -176,6 +199,7 @@ const TopWrap = styled.section`
 `;
 
 const WheelSection = styled.section`
+  position: relative;
   width: 800px;
   padding: 30px;
   margin: 0 auto 40px;
@@ -190,6 +214,7 @@ const WheelSection = styled.section`
 `;
 
 const WheelWrap = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -208,6 +233,18 @@ const WheelWrap = styled.div`
   }
 `;
 
+const LottieWrap = styled.div`
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 30;
+  pointer-events: none;
+
+  @media screen and (max-width: 600px) {
+    top: 0;
+  }
+`;
+
 const Empty = styled.p`
   padding: 80px 0;
   text-align: center;
@@ -221,12 +258,9 @@ const Empty = styled.p`
   }
 `;
 
-const ResultSection = styled.section`
-  width: 600px;
-  padding: 20px;
-  margin: 0 auto 40px;
-  background-color: #fff;
-  box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+const ResultWrap = styled.div`
+  padding: 10px;
+  margin: 20px 0;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -246,10 +280,6 @@ const ResultSection = styled.section`
     line-height: 30px;
 
     margin: 0;
-  }
-
-  @media screen and (max-width: 600px) {
-    width: 100%;
   }
 `;
 

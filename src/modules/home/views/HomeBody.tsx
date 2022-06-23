@@ -1,15 +1,21 @@
 import { ButtonV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import Lottie from "react-lottie-player";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 
 import { useCore } from "core";
 
+import rouletteAnimation from "../../../assets/lottie/roulette-animation2.json";
+import voteAnimation from "../../../assets/lottie/vote-animation.json";
+
 const HomeBody = observer(() => {
   const core = useCore();
   const { isLoggedIn, user, logout } = core.googleAuth;
   const history = useHistory();
+  const [voteAnimeStart, setVoteAnimeStart] = useState(false);
+  const [rouletteAnimeStart, setRouletteAnimeStart] = useState(false);
 
   const onLogin = useCallback(() => {
     core.googleAuth.googleLogin();
@@ -29,20 +35,56 @@ const HomeBody = observer(() => {
       <ButtonsWrap>
         {isLoggedIn ? (
           <>
-            <ButtonV2
-              onClick={() => {
-                history.push("/vote");
+            <LottieWrap
+              onMouseEnter={() => {
+                setVoteAnimeStart(true);
+              }}
+              onMouseLeave={() => {
+                setVoteAnimeStart(false);
               }}
             >
-              투표하기
-            </ButtonV2>
-            <ButtonV2
-              onClick={() => {
-                history.push("/roulette");
+              <ButtonV2
+                onClick={() => {
+                  history.push("/vote");
+                }}
+              >
+                <Lottie
+                  className="lottie"
+                  play={voteAnimeStart}
+                  speed={0.9}
+                  animationData={voteAnimation}
+                  style={{ width: 180, height: 180 }}
+                />
+                <span>투표하기</span>
+              </ButtonV2>
+            </LottieWrap>
+            <LottieWrap
+              onMouseEnter={() => {
+                setRouletteAnimeStart(true);
+              }}
+              onMouseLeave={() => {
+                setRouletteAnimeStart(false);
               }}
             >
-              돌림판
-            </ButtonV2>
+              <ButtonV2
+                onClick={() => {
+                  history.push("/roulette");
+                }}
+              >
+                <Lottie
+                  className="lottie"
+                  play={rouletteAnimeStart}
+                  speed={0.9}
+                  animationData={rouletteAnimation}
+                  style={{
+                    width: 180,
+                    height: 180,
+                    paddingBottom: 50,
+                  }}
+                />
+                <span>돌림판</span>
+              </ButtonV2>
+            </LottieWrap>
           </>
         ) : (
           <ButtonV2 className="login" onClick={onLogin}>
@@ -75,17 +117,33 @@ const HomeBodyWrap = styled.div`
 const ButtonsWrap = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 30px;
+  align-items: flex-end;
+  column-gap: 10px;
+  margin-top: 50px;
 
   button {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 200px;
-    height: 80px;
+    height: 220px;
+    padding: 0;
     background-color: #ededed;
     border: none;
     box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
     font-size: 18px;
-    color: #333;
+    color: #444;
+
+    .lottie {
+      position: absolute;
+      top: 50;
+    }
+
+    span {
+      padding-top: 150px;
+    }
   }
 
   button:hover {
@@ -109,6 +167,12 @@ const ButtonsWrap = styled.div`
   }
 `;
 
+const LottieWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const Title = styled.h1`
   font-size: 40px;
   text-align: center;
@@ -123,7 +187,7 @@ const UserTitle = styled.div`
   margin: 20px 0 0;
 
   h2 {
-    font-size: 28px;
+    font-size: 26px;
     margin: 0;
     color: #ededed;
     text-shadow: 0 5px 11px #00000030;
@@ -137,6 +201,6 @@ const UserTitle = styled.div`
     outline: none;
   }
   button:hover {
-    color: #c25d5d;
+    color: #d05b5b;
   }
 `;
