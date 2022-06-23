@@ -2,23 +2,25 @@ import { ButtonV2, IconV2, RadioV2 } from "@meshkorea/vroong-design-system-web";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
-import { UserType } from "core/services/FireBase";
+import GoogleAuth from "core/GoogleAuth";
 
 import { Vote, VoteItem } from "../../VoteStore";
 
 interface VoteItemProps {
-  user: UserType;
+  auth: GoogleAuth;
   voteInfo: Vote;
   removeVoteList(id: string): void;
   handleVoting(info: Vote, targetId: number, email: string): void;
 }
 
 const VoteItem = ({
-  user,
+  auth,
   voteInfo,
   removeVoteList,
   handleVoting,
 }: VoteItemProps) => {
+  const { user, loginCheck } = auth;
+
   const email = user?.email ? user.email : "";
   const [isSelect, setIsSelect] = useState<number>();
   const [openStatistics, setOpenStatistics] = useState<boolean>(false);
@@ -30,11 +32,13 @@ const VoteItem = ({
 
   const onVote = useCallback(() => {
     if (isSelect !== undefined) {
-      handleVoting(voteInfo, isSelect, email);
+      if (loginCheck()) {
+        handleVoting(voteInfo, isSelect, email);
+      }
     } else {
       setErrorSelect("투표 항목을 선택해주세요!");
     }
-  }, [handleVoting, isSelect, voteInfo, email]);
+  }, [isSelect, loginCheck, handleVoting, voteInfo, email]);
 
   const handleOptionCheck = useCallback(
     (value: number) => {

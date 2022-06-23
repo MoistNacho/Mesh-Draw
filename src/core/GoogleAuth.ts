@@ -55,4 +55,16 @@ export default class GoogleAuth {
       this.user = result;
     });
   };
+
+  @action
+  public loginCheck = () => {
+    if (!this.user) {
+      this.core.dialog.openAlert({
+        title: "Mesh Draw",
+        message: "로그인 후 이용가능합니다",
+      });
+    }
+
+    return !!this.user;
+  };
 }

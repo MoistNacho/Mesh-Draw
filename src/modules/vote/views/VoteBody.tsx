@@ -1,6 +1,6 @@
 import { ButtonV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { ModalFormProvider, ModalForm } from "../../modalForm";
@@ -20,14 +20,18 @@ const VoteBody = observer(() => {
     core,
     listLoaded,
   } = voteStore;
-  const { user } = core.googleAuth;
+  const { googleAuth } = core;
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
 
   useEffect(() => {
-    if (user) {
-      getVoteList();
+    getVoteList();
+  }, [getVoteList]);
+
+  const handleOpenAddForm = useCallback(() => {
+    if (googleAuth.loginCheck()) {
+      setOpenAddForm(true);
     }
-  }, [getVoteList, user]);
+  }, [googleAuth]);
 
   const closeAddForm = () => {
     setOpenAddForm(false);
@@ -44,9 +48,7 @@ const VoteBody = observer(() => {
             border: "none",
             color: "#fff",
           }}
-          onClick={() => {
-            setOpenAddForm(true);
-          }}
+          onClick={handleOpenAddForm}
         >
           투표 추가
         </ButtonV2>
@@ -57,7 +59,7 @@ const VoteBody = observer(() => {
             return (
               <VoteItem
                 key={voteInfo.title}
-                user={user}
+                auth={googleAuth}
                 voteInfo={voteInfo}
                 removeVoteList={removeVoteList}
                 handleVoting={handleVoting}
@@ -73,7 +75,7 @@ const VoteBody = observer(() => {
           <ModalForm
             closeAddForm={closeAddForm}
             addList={addVoteList}
-            user={user}
+            auth={googleAuth}
             modalType="vote"
           />
         </ModalFormProvider>

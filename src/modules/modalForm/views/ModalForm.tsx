@@ -3,21 +3,21 @@ import { observer } from "mobx-react";
 import React from "react";
 import styled from "styled-components";
 
-import { UserType } from "core/services/FireBase";
+import GoogleAuth from "core/GoogleAuth";
 import { Roulette } from "modules/roulette/RouletteStore";
 import { Vote } from "modules/vote/VoteStore";
 
 import { useModalFormStore } from "../ModalFormProvider";
 
 interface ModalFormProps {
-  user?: UserType;
+  auth?: GoogleAuth;
   closeAddForm: VoidFunction;
   addList(item: Vote | Roulette): void;
   modalType: "vote" | "roulette";
 }
 
 const ModalForm = observer(
-  ({ user, closeAddForm, addList, modalType }: ModalFormProps) => {
+  ({ auth, closeAddForm, addList, modalType }: ModalFormProps) => {
     const { modalFormStore } = useModalFormStore();
     const { title, items, itemNameError, titleError } = modalFormStore;
     const {
@@ -33,12 +33,12 @@ const ModalForm = observer(
         return;
       }
 
-      if (modalType === "vote") {
+      if (modalType === "vote" && auth) {
         const newVote: Vote = {
           id: "",
           title,
           items,
-          userId: user?.uid || "",
+          userId: auth.user?.uid || "",
           createdAt: new Date().valueOf(),
           participants: [],
         };
