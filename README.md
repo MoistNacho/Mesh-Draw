@@ -1,6 +1,11 @@
-# Mesh Web Boilerplate
+# Mesh Draw
 
-메쉬코리아의 웹 제품을 위한 기본 프로젝트
+MeshKorea 보일러 플레이트 기반으로 제작한 토이프로젝트 입니다.
+Firebase와 연동하여 투표를 생성하고 참여할 수 있습니다.
+
+# 추후 추가 할 기능
+
+룰렛
 
 ## Features
 
@@ -126,9 +131,3 @@ Open API spec 문서를 redoc 을 사용하여 웹 브라우저에서 확인합�
   - replace-in-file
   - rimraf
   - shelljs
-
-## clone 후에 해야 할 것들
-
-- Github 저장소 Settings &gt; Secrets 에서 `SSH_PRIVATE_KEY`, `GPR_AUTH_TOKEN`을 설정하세요.
-  - `SSH_PRIVATE_KEY`는 웹프론트엔드 팀장에게 받으시면 됩니다.
-  - `GPR_AUTH_TOKEN`은 [Mesh One 프로젝트 설정](https://wiki.mm.meshkorea.net/pages/viewpage.action?pageId=62639523) 문서에 있습니다.

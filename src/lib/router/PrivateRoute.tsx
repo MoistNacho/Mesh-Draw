@@ -24,8 +24,7 @@ const PrivateRoute = observer(
       const redirect = `${location.pathname}${encodeURIComponent(
         location.search,
       )}${location.hash}`;
-      const to =
-        redirect === "/" ? "/welcome" : `/welcome?redirect=${redirect}`;
+      const to = redirect === "/" ? "/home" : `/home?redirect=${redirect}`;
 
       return <Redirect to={to} />;
     };
@@ -33,7 +32,7 @@ const PrivateRoute = observer(
     return (
       <Route
         {...rest}
-        render={core.auth.isLoggedIn ? render : renderFallback}
+        render={core.googleAuth.isLoggedIn ? render : renderFallback}
       />
     );
   },

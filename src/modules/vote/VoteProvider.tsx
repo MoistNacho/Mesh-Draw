@@ -9,11 +9,15 @@ export interface VoteContext {
   voteStore: VoteStore;
 }
 
+interface Props {
+  children: React.ReactNode;
+}
+
 const LocalContext = React.createContext<VoteContext | null>(null);
 
 export const useVoteStore = generateUseContext(LocalContext);
 
-const VoteProvider: React.FC = ({ children }) => {
+const VoteProvider: React.FC<Props> = ({ children }) => {
   const core = useCore();
 
   const [stores] = React.useState<VoteContext>(() => ({

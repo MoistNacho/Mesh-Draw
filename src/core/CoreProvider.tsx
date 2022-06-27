@@ -12,7 +12,11 @@ export const useCore = generateUseContext(
   "Cannot find the core context.",
 );
 
-const CoreProvider: FC = observer(({ children }) => {
+interface Props {
+  children?: React.ReactNode;
+}
+
+const CoreProvider: FC<Props> = observer(({ children }) => {
   const [core] = useState(() => new Core());
   return (
     <CoreContext.Provider value={core}>

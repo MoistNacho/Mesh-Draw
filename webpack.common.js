@@ -114,7 +114,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       templateParameters: {
-        title: "title",
+        title: "Mesh Draw",
         description: "description",
         url: "url",
         themeColor: "#ffffff",
