@@ -87,7 +87,7 @@ const HomeBody = observer(() => {
             </LottieWrap>
           </>
         ) : (
-          <ButtonV2 className="login" onClick={onLogin}>
+          <ButtonV2 className="login" onClick={onLogin} style={{ height: 60 }}>
             <img
               src="https://img.icons8.com/color/48/undefined/google-logo.png"
               alt="google_icon"
@@ -150,13 +150,15 @@ const ButtonsWrap = styled.div`
   }
 
   .login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
 
     img {
       width: 28px;
       margin-right: 8px;
+    }
+
+    span {
+      padding: 0;
     }
   }
 `;
