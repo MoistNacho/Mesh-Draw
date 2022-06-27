@@ -117,7 +117,6 @@ const HomeBodyWrap = styled.div`
 const ButtonsWrap = styled.div`
   display: flex;
   justify-content: center;
-  align-items: flex-end;
   column-gap: 10px;
   margin-top: 50px;
 
@@ -159,11 +158,6 @@ const ButtonsWrap = styled.div`
       width: 28px;
       margin-right: 8px;
     }
-  }
-
-  @media screen and (max-width: 800px) {
-    width: 100%;
-    padding: 0 10px;
   }
 `;
 
