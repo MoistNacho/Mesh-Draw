@@ -153,6 +153,7 @@ const RouletteBody = observer(() => {
       {openAddForm && (
         <ModalFormProvider>
           <ModalForm
+            auth={googleAuth}
             closeAddForm={closeAddForm}
             modalType="roulette"
             addList={addRouletteList}

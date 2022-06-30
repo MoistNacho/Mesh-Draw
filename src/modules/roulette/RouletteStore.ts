@@ -1,16 +1,17 @@
 /* eslint-disable no-console */
-import { addDoc, collection, getDocs } from "firebase/firestore";
 import { action, observable } from "mobx";
 
 import Core from "core";
-import { DB } from "core/services/FireBase";
 
 import { WheelDataType } from "../../components/CustomWheel";
+
+import RouletteService from "./services/RouletteService";
 
 export interface Roulette {
   id: string;
   title: string;
   items: RouletteItem[];
+  userId: string;
   createdAt: number;
 }
 
@@ -20,6 +21,8 @@ export interface RouletteItem extends WheelDataType {
 }
 
 export default class RouletteStore {
+  private service: RouletteService;
+
   public core: Core;
 
   @observable
@@ -45,19 +48,14 @@ export default class RouletteStore {
 
   constructor(core: Core) {
     this.core = core;
+    this.service = new RouletteService(this.core);
   }
 
   @action.bound
-  public async addRouletteList(item: Roulette, isUpload = true) {
-    try {
-      this.rouletteWheel = item;
-      this.drawResult = "";
-      if (isUpload) {
-        await addDoc(collection(DB, "roulettes"), item);
-      }
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+  public addRouletteList(item: Roulette) {
+    this.rouletteWheel = item;
+    this.drawResult = "";
+    this.service.addRoulette(item);
   }
 
   @action.bound
@@ -83,19 +81,10 @@ export default class RouletteStore {
 
   @action.bound
   public async getHistory() {
-    try {
-      this.historyLoading = true;
-      const result = await getDocs(collection(DB, "roulettes"));
-      const getList = result.docs.map((item) => {
-        return { ...item.data(), id: item.id } as Roulette;
-      });
-      getList.sort((a, b) => b.createdAt - a.createdAt);
+    this.historyLoading = true;
+    const items = await this.service.getHistory();
 
-      this.historyList = getList;
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    } finally {
-      this.historyLoading = false;
-    }
+    this.historyList = items || [];
+    this.historyLoading = false;
   }
 }

@@ -33,12 +33,12 @@ const ModalForm = observer(
         return;
       }
 
-      if (modalType === "vote" && auth) {
+      if (modalType === "vote") {
         const newVote: Vote = {
           id: "",
           title,
           items,
-          userId: auth.user?.uid || "",
+          userId: auth!.user?.uid || "",
           createdAt: new Date().valueOf(),
           participants: [],
         };
@@ -52,6 +52,7 @@ const ModalForm = observer(
           id: "",
           title,
           items: rouletteItems,
+          userId: auth!.user?.uid || "",
           createdAt: new Date().valueOf(),
         };
         addList(newRoulette);
