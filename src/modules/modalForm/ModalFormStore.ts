@@ -1,7 +1,12 @@
 import { action, observable } from "mobx";
 
 import Core from "core";
-import { VoteItem } from "modules/vote/VoteStore";
+import { Roulette } from "modules/roulette/RouletteStore";
+
+export type Item = {
+  id: number;
+  name: string;
+};
 
 export default class ModalFormStore {
   public core: Core;
@@ -10,13 +15,13 @@ export default class ModalFormStore {
   public title = "";
 
   @observable
-  public items: VoteItem[] = [
-    { id: 0, name: "", like: 0 },
-    { id: 1, name: "", like: 0 },
+  public items: Item[] = [
+    { id: 0, name: "" },
+    { id: 1, name: "" },
   ];
 
   @observable
-  private nextItemId = 3;
+  private nextItemId = 2;
 
   @observable
   public itemNameError = "";
@@ -92,5 +97,16 @@ export default class ModalFormStore {
     }
 
     return emptyTitle || emptyItemName;
+  }
+
+  @action.bound
+  public loadEditData(editData: Roulette) {
+    const convertItems = editData.items.map((i, index) => {
+      return { id: index, name: i.option };
+    });
+
+    this.title = editData.title;
+    this.items = convertItems;
+    this.nextItemId = convertItems.length;
   }
 }
