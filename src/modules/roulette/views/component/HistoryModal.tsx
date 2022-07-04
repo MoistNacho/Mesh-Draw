@@ -3,34 +3,43 @@ import { observer } from "mobx-react";
 import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 
+import GoogleAuth from "core/GoogleAuth";
 import { Roulette } from "modules/roulette/RouletteStore";
 
 interface HistoryModalProps {
+  auth: GoogleAuth;
   historyList: Roulette[];
   historyLoading: boolean;
   getHistory: () => void;
   closeHistoryModal: () => void;
-  addRouletteList: (item: Roulette, isUpload: boolean) => void;
+  addRoulette: (item: Roulette, isUpload: boolean) => void;
+  removeRoulette: (rouletteId: string) => void;
+  handleEditHistory: (history: Roulette) => void;
 }
 
 const HistoryModal = observer(
   ({
+    auth,
     historyList,
     historyLoading,
     getHistory,
     closeHistoryModal,
-    addRouletteList,
+    addRoulette,
+    removeRoulette,
+    handleEditHistory,
   }: HistoryModalProps) => {
+    const { user } = auth;
+
     useEffect(() => {
       getHistory();
     }, [getHistory]);
 
     const loadHistory = useCallback(
       (history: Roulette) => {
-        addRouletteList(history, false);
+        addRoulette(history, false);
         closeHistoryModal();
       },
-      [addRouletteList, closeHistoryModal],
+      [addRoulette, closeHistoryModal],
     );
 
     return (
@@ -45,27 +54,56 @@ const HistoryModal = observer(
                   <ItemWrap key={history.id}>
                     <div className="top">
                       <p>{history.title}</p>
-                      <ButtonV2
-                        className="createBtn"
-                        style={{
-                          height: "30px",
-                          backgroundColor: "#fff",
-                          color: "#1e85fa",
-                          border: "none",
-                          fontSize: "14px",
-                        }}
-                        onClick={() => {
-                          loadHistory(history);
-                        }}
-                      >
-                        <IconV2
-                          name="CLOUD_DOWNLOAD"
-                          width="18px"
-                          height="18px"
-                          color="#1e85fa"
-                        />{" "}
-                        불러오기
-                      </ButtonV2>
+                      <div>
+                        <button
+                          type="button"
+                          className="loadBtn"
+                          onClick={() => {
+                            loadHistory(history);
+                          }}
+                        >
+                          <IconV2
+                            name="CLOUD_DOWNLOAD"
+                            width="18px"
+                            height="18px"
+                            color="#1e85fa"
+                          />{" "}
+                          불러오기
+                        </button>
+                        <button
+                          type="button"
+                          className="editBtn"
+                          onClick={() => {
+                            handleEditHistory(history);
+                          }}
+                        >
+                          <IconV2
+                            name="SETTINGS"
+                            width="18px"
+                            height="18px"
+                            color="#555"
+                          />{" "}
+                          수정하기
+                        </button>
+                        {history.userId === user?.uid && (
+                          <button
+                            type="button"
+                            className="removeBtn"
+                            style={{ width: "50px" }}
+                            onClick={() => {
+                              removeRoulette(history.id);
+                            }}
+                          >
+                            <IconV2
+                              name="DELETE"
+                              width="18px"
+                              height="18px"
+                              color="#ff4949"
+                            />{" "}
+                            삭제
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <ul className="items">
                       {history.items.map((item) => {
@@ -82,17 +120,7 @@ const HistoryModal = observer(
             )}
           </HistoryListWrap>
           <ButtonsWrap>
-            <ButtonV2
-              className="createBtn"
-              style={{
-                width: "100px",
-                height: "40px",
-                backgroundColor: "#666",
-                color: "#fff",
-                border: "none",
-              }}
-              onClick={closeHistoryModal}
-            >
+            <ButtonV2 className="closeBtn" onClick={closeHistoryModal}>
               닫기
             </ButtonV2>
           </ButtonsWrap>
@@ -155,6 +183,18 @@ const HistoryListWrap = styled.div`
 const ButtonsWrap = styled.div`
   display: flex;
   justify-content: right;
+
+  .closeBtn {
+    width: 100px;
+    height: 40px;
+    background-color: #666;
+    color: #fff;
+    border: none;
+
+    :hover {
+      background-color: #818181;
+    }
+  }
 `;
 
 const ItemWrap = styled.article`
@@ -178,6 +218,29 @@ const ItemWrap = styled.article`
         content: "주제 : ";
         color: #1e85fa;
       }
+    }
+
+    button {
+      padding: 0;
+      height: 30px;
+      background-color: #fff;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .loadBtn {
+      color: #1e85fa;
+    }
+
+    .editBtn {
+      margin-left: 10px;
+      color: #555;
+    }
+
+    .removeBtn {
+      margin-left: 10px;
+      color: #ff4949;
     }
   }
 

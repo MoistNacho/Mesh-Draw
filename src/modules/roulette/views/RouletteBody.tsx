@@ -8,6 +8,7 @@ import lottieJson from "../../../assets/lottie/roulette-congrats.json";
 import { Wheel } from "../../../components/CustomWheel";
 import { ModalFormProvider, ModalForm } from "../../modalForm";
 import { useRouletteStore } from "../RouletteProvider";
+import { Roulette } from "../RouletteStore";
 
 import HistoryModal from "./component/HistoryModal";
 
@@ -36,13 +37,19 @@ const RouletteBody = observer(() => {
     historyLoading,
     animationPlay,
   } = rouletteStore;
-  const { addRouletteList, handleSpinClick, handleSpinStop, getHistory } =
-    rouletteStore;
+  const {
+    addRoulette,
+    removeRoulette,
+    handleSpinClick,
+    handleSpinStop,
+    getHistory,
+  } = rouletteStore;
 
   const { googleAuth } = core;
 
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
   const [openHistory, setOpenHistory] = useState<boolean>(false);
+  const [editHistory, setEditHistory] = useState<Roulette | null>(null);
 
   const handleOpenAddForm = useCallback(() => {
     if (googleAuth.loginCheck()) {
@@ -56,6 +63,12 @@ const RouletteBody = observer(() => {
 
   const closeHistoryModal = () => {
     setOpenHistory(false);
+  };
+
+  const handleEditHistory = (history: Roulette) => {
+    setEditHistory(history);
+    setOpenHistory(false);
+    setOpenAddForm(true);
   };
 
   return (
@@ -156,17 +169,21 @@ const RouletteBody = observer(() => {
             auth={googleAuth}
             closeAddForm={closeAddForm}
             modalType="roulette"
-            addList={addRouletteList}
+            addList={addRoulette}
+            editData={editHistory}
           />
         </ModalFormProvider>
       )}
       {openHistory && (
         <HistoryModal
+          auth={googleAuth}
           historyList={historyList}
           historyLoading={historyLoading}
           getHistory={getHistory}
           closeHistoryModal={closeHistoryModal}
-          addRouletteList={addRouletteList}
+          addRoulette={addRoulette}
+          removeRoulette={removeRoulette}
+          handleEditHistory={handleEditHistory}
         />
       )}
     </RouletteBodyWrap>

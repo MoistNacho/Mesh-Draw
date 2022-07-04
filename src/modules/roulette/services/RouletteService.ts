@@ -1,6 +1,10 @@
-/* eslint-disable no-console */
-/* eslint-disable class-methods-use-this */
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 import Core from "core";
 import { DB } from "core/services/FireBase";
@@ -37,6 +41,19 @@ export default class RouletteService {
       this.core.dialog.openAlert({
         title: "Mash Draw",
         message: "룰렛을 업로드중 오류발생!",
+      });
+    }
+  }
+
+  public async removeRoulette(rouletteId: string) {
+    try {
+      await deleteDoc(doc(DB, "roulettes", rouletteId));
+      const res = await this.getHistory();
+      return res;
+    } catch (e) {
+      this.core.dialog.openAlert({
+        title: "Mash Draw",
+        message: "룰렛을 삭제중 오류발생!",
       });
     }
   }

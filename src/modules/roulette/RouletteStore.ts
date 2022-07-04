@@ -52,10 +52,29 @@ export default class RouletteStore {
   }
 
   @action.bound
-  public addRouletteList(item: Roulette) {
+  public addRoulette(item: Roulette, isUpload = true) {
     this.rouletteWheel = item;
     this.drawResult = "";
-    this.service.addRoulette(item);
+
+    if (isUpload) {
+      this.service.addRoulette(item);
+    }
+  }
+
+  @action.bound
+  public async removeRoulette(rouletteId: string) {
+    const items = await this.service.removeRoulette(rouletteId);
+
+    this.historyList = items || [];
+  }
+
+  @action.bound
+  public async getHistory() {
+    this.historyLoading = true;
+    const items = await this.service.getHistory();
+
+    this.historyList = items || [];
+    this.historyLoading = false;
   }
 
   @action.bound
@@ -77,14 +96,5 @@ export default class RouletteStore {
     setTimeout(() => {
       this.animationPlay = false;
     }, 3000);
-  }
-
-  @action.bound
-  public async getHistory() {
-    this.historyLoading = true;
-    const items = await this.service.getHistory();
-
-    this.historyList = items || [];
-    this.historyLoading = false;
   }
 }

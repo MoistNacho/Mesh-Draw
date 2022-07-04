@@ -1,6 +1,6 @@
 import { ButtonV2, TextInputV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import GoogleAuth from "core/GoogleAuth";
@@ -12,12 +12,13 @@ import { useModalFormStore } from "../ModalFormProvider";
 interface ModalFormProps {
   auth?: GoogleAuth;
   closeAddForm: VoidFunction;
-  addList(item: Vote | Roulette): void;
+  addList(item: Vote | Roulette, isUpload?: boolean): void;
   modalType: "vote" | "roulette";
+  editData?: Roulette | null;
 }
 
 const ModalForm = observer(
-  ({ auth, closeAddForm, addList, modalType }: ModalFormProps) => {
+  ({ auth, closeAddForm, addList, modalType, editData }: ModalFormProps) => {
     const { modalFormStore } = useModalFormStore();
     const { title, items, itemNameError, titleError } = modalFormStore;
     const {
@@ -26,7 +27,14 @@ const ModalForm = observer(
       createListItem,
       removeListItem,
       handleInputError,
+      loadEditData,
     } = modalFormStore;
+
+    useEffect(() => {
+      if (editData) {
+        loadEditData(editData);
+      }
+    }, [editData, loadEditData]);
 
     const handleSubmit = () => {
       if (handleInputError()) {
@@ -34,10 +42,13 @@ const ModalForm = observer(
       }
 
       if (modalType === "vote") {
+        const voteItems = items.map((i) => {
+          return { id: i.id, name: i.name, like: 0 };
+        });
         const newVote: Vote = {
           id: "",
           title,
-          items,
+          items: voteItems,
           userId: auth!.user?.uid || "",
           createdAt: new Date().valueOf(),
           participants: [],
@@ -45,6 +56,7 @@ const ModalForm = observer(
 
         addList(newVote);
       } else {
+        const isEdit = !!editData;
         const rouletteItems = items.map((i) => {
           return { id: i.id, option: i.name };
         });
@@ -55,7 +67,7 @@ const ModalForm = observer(
           userId: auth!.user?.uid || "",
           createdAt: new Date().valueOf(),
         };
-        addList(newRoulette);
+        addList(newRoulette, !isEdit);
       }
 
       closeAddForm();
