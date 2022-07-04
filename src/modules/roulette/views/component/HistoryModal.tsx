@@ -1,10 +1,13 @@
 import { ButtonV2, IconV2 } from "@meshkorea/vroong-design-system-web";
 import { observer } from "mobx-react";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import GoogleAuth from "core/GoogleAuth";
 import { Roulette } from "modules/roulette/RouletteStore";
+
+import starOffImg from "../../assets/star-off.svg";
+import starOnImg from "../../assets/star-on.svg";
 
 interface HistoryModalProps {
   auth: GoogleAuth;
@@ -29,9 +32,12 @@ const HistoryModal = observer(
     handleEditHistory,
   }: HistoryModalProps) => {
     const { user } = auth;
+    const [favorites, setFavorites] = useState<string[]>([]);
+    const [favoritesFilter, setFavoritesFilter] = useState(false);
 
     useEffect(() => {
       getHistory();
+      setFavorites(getLocalFavorites);
     }, [getHistory]);
 
     const loadHistory = useCallback(
@@ -42,19 +48,80 @@ const HistoryModal = observer(
       [addRoulette, closeHistoryModal],
     );
 
+    const getLocalFavorites = () => {
+      const localData = localStorage.getItem("favorites");
+      const favoritesArray = localData ? JSON.parse(localData) : [];
+
+      return favoritesArray;
+    };
+
+    const handleFavorites = useCallback(
+      (id: string) => {
+        const overLap = favorites.find((item) => item === id);
+
+        if (overLap) {
+          const newItems = favorites.filter((item) => item !== id);
+          localStorage.setItem("favorites", JSON.stringify([...newItems]));
+        } else {
+          localStorage.setItem("favorites", JSON.stringify([...favorites, id]));
+        }
+
+        setFavorites(getLocalFavorites);
+      },
+      [favorites],
+    );
+
     return (
       <ModalWrap>
         <ModalBackground onClick={closeHistoryModal} />
         <ModalBodyWrap>
           <h2>돌림판 History</h2>
+          <HistoryFilterWrap>
+            <button
+              className={favoritesFilter ? "all" : "favor"}
+              type="button"
+              onClick={() => {
+                setFavoritesFilter(!favoritesFilter);
+              }}
+            >
+              <IconV2
+                name={favoritesFilter ? "VIEW_LIST" : "BOOKMARK"}
+                width="20px"
+                height="20px"
+                color="#5aa3f7"
+              />{" "}
+              {favoritesFilter ? "전체목록" : "즐겨찾기"}
+            </button>
+          </HistoryFilterWrap>
           <HistoryListWrap>
             {historyList?.length > 0 ? (
               historyList.map((history) => {
+                const findFavorites = favorites.find(
+                  (item) => item === history.id,
+                );
+
+                if (favoritesFilter && !findFavorites) {
+                  return;
+                }
+
+                const star = findFavorites ? starOnImg : starOffImg;
+
                 return (
                   <ItemWrap key={history.id}>
                     <div className="top">
-                      <p>{history.title}</p>
-                      <div>
+                      <div className="left">
+                        <button
+                          type="button"
+                          className="favoritesBtn"
+                          onClick={() => {
+                            handleFavorites(history.id);
+                          }}
+                        >
+                          <img src={star} alt="star-off" />
+                        </button>
+                        <p>{history.title}</p>
+                      </div>
+                      <div className="right">
                         <button
                           type="button"
                           className="loadBtn"
@@ -165,6 +232,29 @@ const ModalBodyWrap = styled.article`
   }
 `;
 
+const HistoryFilterWrap = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+  button {
+    display: flex;
+    align-items: baseline;
+
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5aa3f7;
+  }
+
+  .all {
+    color: #666;
+
+    i {
+      color: #666;
+    }
+  }
+`;
+
 const HistoryListWrap = styled.div`
   margin-bottom: 14px;
   padding: 30px 8px;
@@ -207,19 +297,6 @@ const ItemWrap = styled.article`
     justify-content: space-between;
     align-items: center;
 
-    p {
-      margin: 0;
-      font-weight: 500;
-      font-size: 18px;
-      color: #555;
-
-      ::before {
-        display: inline;
-        content: "주제 : ";
-        color: #1e85fa;
-      }
-    }
-
     button {
       padding: 0;
       height: 30px;
@@ -229,18 +306,46 @@ const ItemWrap = styled.article`
       font-weight: 500;
     }
 
-    .loadBtn {
-      color: #1e85fa;
+    .left {
+      display: flex;
+      align-items: center;
+
+      .favoritesBtn {
+        margin-right: 10px;
+        img {
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      p {
+        margin: 0;
+        font-weight: 500;
+        font-size: 18px;
+        color: #555;
+
+        ::before {
+          display: inline;
+          content: "주제 : ";
+          color: #1e85fa;
+        }
+      }
     }
 
-    .editBtn {
-      margin-left: 10px;
-      color: #555;
-    }
+    .right {
+      .loadBtn {
+        color: #1e85fa;
+      }
 
-    .removeBtn {
-      margin-left: 10px;
-      color: #ff4949;
+      .editBtn {
+        margin-left: 10px;
+        color: #555;
+      }
+
+      .removeBtn {
+        margin-left: 10px;
+        color: #ff4949;
+      }
     }
   }
 
