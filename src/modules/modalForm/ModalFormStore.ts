@@ -2,17 +2,19 @@ import { action, observable } from "mobx";
 
 import Core from "core";
 import { Roulette } from "modules/roulette/RouletteStore";
+import { Vote } from "modules/vote/VoteStore";
 
-export type Item = {
+import ModalFormCommand, { ModalFormSource } from "./commands/ModalFormCommand";
+
+type Item = {
   id: number;
   name: string;
 };
-
 export default class ModalFormStore {
   public core: Core;
 
   @observable
-  public title = "";
+  public form: ModalFormCommand = new ModalFormCommand();
 
   @observable
   public items: Item[] = [
@@ -26,19 +28,21 @@ export default class ModalFormStore {
   @observable
   public itemNameError = "";
 
-  @observable
-  public titleError = "";
-
   constructor(core: Core) {
     this.core = core;
+    this.form.update({
+      items: [
+        { id: 0, name: "" },
+        { id: 1, name: "" },
+      ],
+    });
   }
 
   @action.bound
-  public handleTitle(value: string) {
-    if (this.titleError) {
-      this.titleError = "";
-    }
-    this.title = value;
+  public handleTitle(key: keyof ModalFormSource, value: string) {
+    this.form.update({
+      [key]: value,
+    });
   }
 
   @action.bound
@@ -46,57 +50,58 @@ export default class ModalFormStore {
     if (this.itemNameError) {
       this.itemNameError = "";
     }
-    const newItems = this.items.map((item) => {
+    const newItems = this.form.items.map((item) => {
       if (item.id === id) {
         return { ...item, name: value };
       }
       return item;
     });
 
-    this.items = newItems;
+    this.form.update({
+      items: newItems,
+    });
   }
 
   @action.bound
   public createListItem() {
-    if (this.items.length >= 10) {
+    if (this.form.items.length >= 10) {
       return;
     }
 
     const newItems = [
-      ...this.items,
+      ...this.form.items,
       {
         id: this.nextItemId,
         name: "",
-        like: 0,
       },
     ];
-    this.items = newItems;
+    this.form.update({
+      items: newItems,
+    });
     this.nextItemId += 1;
   }
 
   @action.bound
   public removeListItem(id: number) {
-    if (this.items.length <= 2) {
+    if (this.form.items.length <= 2) {
       return;
     }
 
-    const newItems = this.items.filter((item) => item.id !== id);
-    this.items = newItems;
+    const newItems = this.form.items.filter((item) => item.id !== id);
+    this.form.update({
+      items: newItems,
+    });
   }
 
   @action.bound
   public handleInputError() {
-    const emptyTitle = this.title === "";
-    const emptyItemName = this.items.find((item) => !item.name);
+    const emptyItemName = this.form.items.find((item) => !item.name);
 
-    if (emptyTitle) {
-      this.titleError = "투표의 주제를 입력하세요";
-    }
     if (emptyItemName) {
       this.itemNameError = "아이템리스트의 이름을 입력하세요.";
     }
 
-    return emptyTitle || emptyItemName;
+    return this.form.errors.title || emptyItemName;
   }
 
   @action.bound
@@ -105,8 +110,42 @@ export default class ModalFormStore {
       return { id: index, name: i.option };
     });
 
-    this.title = editData.title;
-    this.items = convertItems;
+    this.form.update({
+      title: editData.title,
+      items: convertItems,
+    });
+
     this.nextItemId = convertItems.length;
+  }
+
+  @action.bound
+  public convertVoteItem() {
+    const item: Vote = {
+      id: "",
+      title: this.form.title,
+      items: this.form.items.map((i) => {
+        return { id: i.id, name: i.name, like: 0 };
+      }),
+      userId: this.core!.googleAuth?.user?.uid || "",
+      createdAt: new Date().valueOf(),
+      participants: [],
+    };
+    return item;
+  }
+
+  @action.bound
+  public convertRouletteItem() {
+    const rouletteItems = this.form.items.map((i) => {
+      return { id: i.id, option: i.name };
+    });
+    const item: Roulette = {
+      id: "",
+      title: this.form.title,
+      items: rouletteItems,
+      userId: this.core!.googleAuth?.user?.uid || "",
+      createdAt: new Date().valueOf(),
+    };
+
+    return item;
   }
 }

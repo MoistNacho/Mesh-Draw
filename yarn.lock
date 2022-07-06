@@ -1758,6 +1758,16 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@meshkorea/cake-form@3.1.5":
+  version "3.1.5"
+  resolved "https://npm.pkg.github.com/download/@meshkorea/cake-form/3.1.5/c7a52900fd346d592b09615c00c148665a105964f213090d07780d33fc432e6c#4537aff99c25a89cdc310c0773baeb115b9e4806"
+  integrity sha512-qu2kIC0Y4mM8tFxjooG0C54nvD+ndC6TJOmVicBvVjtUwe4Oz1Y+W0JdK7HSAe4DIRsT7S5XOXR7dJqMCYBZug==
+  dependencies:
+    debounce-promise "^3.1.0"
+    debug "^4.1.1"
+    lodash-es "^4.17.11"
+    mobx "^5.8.0"
+
 "@meshkorea/vroong-design-system-web@2.2.19-add-className-clear-icon":
   version "2.2.19-add-className-clear-icon"
   resolved "https://npm.pkg.github.com/download/@meshkorea/vroong-design-system-web/2.2.19-add-className-clear-icon/ed05ce468b6551d36afa06c227f3ffcf5ccace5b46ac81ae73a2507e4376d3db#8dda39b03f690fae9339c263c84d64d9b07d0faa"
@@ -4511,6 +4521,11 @@ date-fns@^2.13.0, date-fns@^2.16.1:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
   integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
+
+debounce-promise@^3.1.0:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/debounce-promise/-/debounce-promise-3.1.2.tgz#320fb8c7d15a344455cd33cee5ab63530b6dc7c5"
+  integrity sha512-rZHcgBkbYavBeD9ej6sP56XfG53d51CD4dnaw989YX/nZ/ZJfgRx/9ePKmTNiUiyQvh4mtrMoS3OAWW+yoYtpg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.9:
   version "2.6.9"
@@ -8520,7 +8535,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.15:
+lodash-es@^4.17.11, lodash-es@^4.17.15:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
@@ -9044,7 +9059,7 @@ mobx-react@^6.2.2, mobx-react@^6.3.0:
   dependencies:
     mobx-react-lite "^2.2.0"
 
-mobx@^5.15.7:
+mobx@^5.15.7, mobx@^5.8.0:
   version "5.15.7"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.7.tgz#b9a5f2b6251f5d96980d13c78e9b5d8d4ce22665"
   integrity sha512-wyM3FghTkhmC+hQjyPGGFdpehrcX1KOXsDuERhfK2YbJemkUhEB+6wzEN639T21onxlfYBmriA1PFnvxTUhcKw==

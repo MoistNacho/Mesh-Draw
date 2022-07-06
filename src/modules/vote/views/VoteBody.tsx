@@ -75,7 +75,6 @@ const VoteBody = observer(() => {
           <ModalForm
             closeAddForm={closeAddForm}
             addList={addVoteList}
-            auth={googleAuth}
             modalType="vote"
           />
         </ModalFormProvider>
