@@ -71,6 +71,14 @@ const HistoryModal = observer(
       [favorites],
     );
 
+    const checkFavoritesEmpty = useCallback(() => {
+      const isEmpty = historyList?.find((history) =>
+        favorites.includes(history.id),
+      );
+
+      return favoritesFilter && !isEmpty;
+    }, [historyList, favorites, favoritesFilter]);
+
     return (
       <ModalWrap>
         <ModalBackground onClick={closeHistoryModal} />
@@ -96,9 +104,7 @@ const HistoryModal = observer(
           <HistoryListWrap>
             {historyList?.length > 0 ? (
               historyList.map((history) => {
-                const findFavorites = favorites.find(
-                  (item) => item === history.id,
-                );
+                const findFavorites = favorites.includes(history.id);
 
                 if (favoritesFilter && !findFavorites) {
                   return;
@@ -184,6 +190,9 @@ const HistoryModal = observer(
               <Empty>
                 {historyLoading ? "불러오는중..." : "히스토리 정보가 없습니다."}
               </Empty>
+            )}
+            {historyList?.length > 0 && checkFavoritesEmpty() && (
+              <Empty>즐겨찾기에 등록된 히스토리가 없습니다.</Empty>
             )}
           </HistoryListWrap>
           <ButtonsWrap>

@@ -3,14 +3,12 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 
-import GoogleAuth from "core/GoogleAuth";
 import { Roulette } from "modules/roulette/RouletteStore";
 import { Vote } from "modules/vote/VoteStore";
 
 import { useModalFormStore } from "../ModalFormProvider";
 
 interface ModalFormProps {
-  auth?: GoogleAuth;
   closeAddForm: VoidFunction;
   addList(item: Vote | Roulette, isUpload?: boolean): void;
   modalType: "vote" | "roulette";
@@ -18,15 +16,17 @@ interface ModalFormProps {
 }
 
 const ModalForm = observer(
-  ({ auth, closeAddForm, addList, modalType, editData }: ModalFormProps) => {
+  ({ closeAddForm, addList, modalType, editData }: ModalFormProps) => {
     const { modalFormStore } = useModalFormStore();
-    const { title, items, itemNameError, titleError } = modalFormStore;
+    const { form, itemNameError } = modalFormStore;
     const {
       handleTitle,
       handleItemsName,
       createListItem,
       removeListItem,
       handleInputError,
+      convertVoteItem,
+      convertRouletteItem,
       loadEditData,
     } = modalFormStore;
 
@@ -42,32 +42,10 @@ const ModalForm = observer(
       }
 
       if (modalType === "vote") {
-        const voteItems = items.map((i) => {
-          return { id: i.id, name: i.name, like: 0 };
-        });
-        const newVote: Vote = {
-          id: "",
-          title,
-          items: voteItems,
-          userId: auth!.user?.uid || "",
-          createdAt: new Date().valueOf(),
-          participants: [],
-        };
-
-        addList(newVote);
+        addList(convertVoteItem());
       } else {
         const isEdit = !!editData;
-        const rouletteItems = items.map((i) => {
-          return { id: i.id, option: i.name };
-        });
-        const newRoulette: Roulette = {
-          id: "",
-          title,
-          items: rouletteItems,
-          userId: auth!.user?.uid || "",
-          createdAt: new Date().valueOf(),
-        };
-        addList(newRoulette, !isEdit);
+        addList(convertRouletteItem(), !isEdit);
       }
 
       closeAddForm();
@@ -83,12 +61,14 @@ const ModalForm = observer(
           <TitleWrap>
             <LabelWrap>
               <Label>제목</Label>
-              {titleError && <Required>{titleError}</Required>}
+              {form.errors.title && <Required>{form.errors.title}</Required>}
             </LabelWrap>
             <TextInputV2
               placeholder="주제를 입력하세요"
-              value={title}
-              onChange={handleTitle}
+              value={form.title}
+              onChange={(value) => {
+                handleTitle("title", value);
+              }}
               width="100%"
             />
           </TitleWrap>
@@ -98,7 +78,7 @@ const ModalForm = observer(
               {itemNameError && <Required>{itemNameError}</Required>}
             </LabelWrap>
             <ul>
-              {items.map((item, index) => {
+              {form.items.map((item, index) => {
                 return (
                   <li key={item.id}>
                     <TextInputV2
