@@ -6,21 +6,21 @@ import { Vote } from "modules/vote/VoteStore";
 
 import ModalFormCommand, { ModalFormSource } from "./commands/ModalFormCommand";
 
-type Item = {
-  id: number;
-  name: string;
-};
+// type Item = {
+//   id: number;
+//   name: string;
+// };
 export default class ModalFormStore {
   public core: Core;
 
   @observable
   public form: ModalFormCommand = new ModalFormCommand();
 
-  @observable
-  public items: Item[] = [
-    { id: 0, name: "" },
-    { id: 1, name: "" },
-  ];
+  // @observable
+  // public items: Item[] = [
+  //   { id: 0, name: "" },
+  //   { id: 1, name: "" },
+  // ];
 
   @observable
   private nextItemId = 2;

@@ -1,5 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import Form, {
+  arrayLength,
+  childrenForm,
   defaultValue,
   label,
   length,
@@ -16,13 +18,16 @@ export interface ModalFormSource {
   items: ItemFormSource[];
 }
 
-// class ItemForm extends Form<ItemFormSource> {
-//   @label("아이디")
-//   public id: number;
+class ItemForm extends Form<ItemFormSource> {
+  @label("아이디")
+  @required()
+  public id: number;
 
-//   @label("아이템")
-//   public name: string;
-// }
+  @label("아이템")
+  @required()
+  @length(1)
+  public name: string;
+}
 
 export default class ModalFormCommand extends Form<ModalFormSource> {
   @label("타이틀")
@@ -32,5 +37,7 @@ export default class ModalFormCommand extends Form<ModalFormSource> {
   public title: string;
 
   @label("리스트 아이템")
-  public items: ItemFormSource[];
+  @childrenForm(ItemForm)
+  @arrayLength(2, 10)
+  public items: ItemForm[];
 }
