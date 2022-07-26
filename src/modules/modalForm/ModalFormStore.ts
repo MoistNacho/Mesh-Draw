@@ -64,7 +64,7 @@ export default class ModalFormStore {
 
   @action.bound
   public createListItem() {
-    if (this.form.items.length >= 10) {
+    if (this.form.items.length >= 12) {
       return;
     }
 
